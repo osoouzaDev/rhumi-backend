@@ -1,20 +1,42 @@
 {
   "name": "rhumi-backend",
   "version": "1.0.0",
-  "description": "",
+  "description": "API segura de Gestão de Pessoas da plataforma RHumi",
   "type": "module",
   "main": "dist/server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "npm run build && node --test test/auth-tokens.test.mjs test/app.test.mjs test/domain-schemas.test.mjs test/protected-routes.test.mjs test/users-schemas.test.mjs test/users-routes.test.mjs test/dashboard.test.mjs test/recruitment.test.mjs test/calendar.test.mjs test/trainings.test.mjs test/journeys.test.mjs test/evaluations.test.mjs test/development.test.mjs test/notifications.test.mjs test/security.test.mjs test/mfa.test.mjs test/redis-config.test.mjs test/encoding.test.mjs",
+    "test:integration:recruitment": "npm run build && node test/recruitment.integration.mjs",
+    "test:integration:calendar": "npm run build && node test/calendar.integration.mjs",
+    "test:integration:trainings": "npm run build && node test/trainings.integration.mjs",
+    "test:integration:journeys": "npm run build && node test/journeys.integration.mjs",
+    "test:integration:evaluations": "npm run build && node test/evaluations.integration.mjs",
+    "test:integration:development": "npm run build && node test/development.integration.mjs",
     "dev": "tsx watch src/server.ts",
     "build": "tsc",
-    "start": "node dist/server.js"
+    "start": "node dist/server.js",
+    "db:status": "npm run build && node dist/database/status.js",
+    "db:permissions": "npm run build && node dist/database/permissions-status.js",
+    "db:migrate": "npm run build && node dist/database/migrate.js",
+    "db:migrate:prod": "node dist/database/migrate.js",
+    "db:seed": "npm run build && node dist/database/seed.js",
+    "db:seed:prod": "node dist/database/seed.js",
+    "test:integration:notifications": "npm run build && node test/notifications.integration.mjs",
+    "db:provision-app-role": "npm run build && node dist/database/provision-app-role.js",
+    "db:provision-app-role:prod": "node dist/database/provision-app-role.js",
+    "test:integration:security": "npm run build && node test/security.integration.mjs",
+    "test:integration:mfa": "npm run build && node test/mfa.integration.mjs"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/osoouzaDev/rhumi-backend.git"
   },
-  "keywords": [],
+  "keywords": [
+    "human-resources",
+    "express",
+    "postgresql",
+    "typescript"
+  ],
   "author": "",
   "license": "ISC",
   "bugs": {
@@ -26,8 +48,13 @@
     "cors": "^2.8.6",
     "dotenv": "^17.4.2",
     "express": "^5.2.1",
+    "express-rate-limit": "^8.6.2",
+    "helmet": "^8.3.0",
     "jsonwebtoken": "^9.0.3",
+    "otpauth": "^9.5.1",
     "pg": "^8.22.0",
+    "rate-limit-redis": "^6.0.1",
+    "redis": "^6.2.1",
     "zod": "^4.4.3"
   },
   "devDependencies": {

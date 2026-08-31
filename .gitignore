@@ -3,3 +3,5 @@ dist
 .env
 banco.sql
 certs/
+**/certs/*.pem
+
