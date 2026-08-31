@@ -459,7 +459,3 @@ export class RecruitmentService {
 }
 
 export const recruitmentService = new RecruitmentService();
-
-
-
-

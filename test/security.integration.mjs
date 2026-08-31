@@ -120,13 +120,13 @@ try {
         const company = await client.query(
             `INSERT INTO companies (legal_name, trade_name, tax_id)
              VALUES ($1, $2, $3) RETURNING id`,
-            [`Empresa de seguranÃƒÆ’Ã‚Â§a ${suffix}`, `Security ${suffix}`, `SEC-${suffix.slice(-16)}`],
+            [`Empresa de segurança ${suffix}`, `Security ${suffix}`, `SEC-${suffix.slice(-16)}`],
         );
         created.companyId = company.rows[0].id;
         const department = await client.query(
             `INSERT INTO departments (company_id, name, acronym)
              VALUES ($1, $2, $3) RETURNING id`,
-            [created.companyId, `SeguranÃƒÆ’Ã‚Â§a ${suffix}`, `S${suffix.slice(-5)}`],
+            [created.companyId, `Segurança ${suffix}`, `S${suffix.slice(-5)}`],
         );
         created.departmentId = department.rows[0].id;
         const position = await client.query(
@@ -145,7 +145,7 @@ try {
                  RETURNING id`,
                 [
                     created.companyId, created.departmentId, created.positionId,
-                    `${kind.toUpperCase()}-${suffix}`, `${kind} temporÃƒÆ’Ã‚Â¡rio ${suffix}`,
+                    `${kind.toUpperCase()}-${suffix}`, `${kind} temporário ${suffix}`,
                     `${kind}.${suffix}@security.invalid`,
                 ],
             );
@@ -297,7 +297,7 @@ try {
     assert.equal(revokedByLogoutAll.response.status, 401);
     assert.equal(revokedByLogoutAll.payload.error.code, "INVALID_SESSION");
 
-    console.log("Controles de sessÃƒÆ’Ã‚Â£o, RBAC e isolamento entre empresas validados com sucesso.");
+    console.log("Controles de sessão, RBAC e isolamento entre empresas validados com sucesso.");
 } finally {
     try {
         await cleanup();

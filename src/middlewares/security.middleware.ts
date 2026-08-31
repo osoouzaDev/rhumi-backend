@@ -13,7 +13,7 @@ const rateLimitHandler = (
     response.status(429).json({
         error: {
             code: "RATE_LIMIT_EXCEEDED",
-            message: "Muitas requisiÃƒÂ§ÃƒÂµes foram realizadas. Tente novamente mais tarde.",
+            message: "Muitas requisições foram realizadas. Tente novamente mais tarde.",
             requestId: request.requestId,
         },
     });
@@ -80,7 +80,7 @@ export const enforceTrustedOrigin = (
         next(new AppError(
             403,
             "UNTRUSTED_REQUEST_ORIGIN",
-            "A origem da requisiÃƒÂ§ÃƒÂ£o nÃƒÂ£o ÃƒÂ© permitida.",
+            "A origem da requisição não é permitida.",
         ));
         return;
     }
@@ -96,7 +96,7 @@ export const enforceTrustedOrigin = (
         next(new AppError(
             403,
             "REQUEST_ORIGIN_REQUIRED",
-            "RequisiÃƒÂ§ÃƒÂµes autenticadas por cookie precisam informar uma origem confiÃƒÂ¡vel.",
+            "Requisições autenticadas por cookie precisam informar uma origem confiável.",
         ));
         return;
     }
@@ -109,7 +109,7 @@ export const requireHttps: RequestHandler = (request, _response, next) => {
         next(new AppError(
             426,
             "HTTPS_REQUIRED",
-            "Esta API aceita somente conexÃƒÂµes HTTPS.",
+            "Esta API aceita somente conexões HTTPS.",
         ));
         return;
     }

@@ -79,7 +79,7 @@ const environmentSchema = z.object({
             if (!value) {
                 context.addIssue({
                     code: "custom",
-                    message: `${name} deve ser definido quando DATABASE_URL nÃƒÂ£o for utilizada.`,
+                    message: `${name} deve ser definido quando DATABASE_URL não for utilizada.`,
                     path: [name],
                 });
             }
@@ -132,7 +132,7 @@ const environmentSchema = z.object({
         } catch {
             context.addIssue({
                 code: "custom",
-                message: `Origem CORS invÃƒÂ¡lida: ${origin}`,
+                message: `Origem CORS inválida: ${origin}`,
                 path: ["CORS_ORIGINS"],
             });
         }
@@ -153,7 +153,7 @@ const environmentSchema = z.object({
         ))) {
             context.addIssue({
                 code: "custom",
-                message: "Em produÃƒÂ§ÃƒÂ£o, CORS_ORIGINS deve conter somente origens HTTPS explÃƒÂ­citas.",
+                message: "Em produção, CORS_ORIGINS deve conter somente origens HTTPS explícitas.",
                 path: ["CORS_ORIGINS"],
             });
         }
@@ -161,21 +161,21 @@ const environmentSchema = z.object({
             || /replace|change|example|secret/i.test(environment.JWT_SECRET)) {
             context.addIssue({
                 code: "custom",
-                message: "Em produÃƒÂ§ÃƒÂ£o, JWT_SECRET deve ter ao menos 48 caracteres nÃƒÂ£o previsÃƒÂ­veis.",
+                message: "Em produção, JWT_SECRET deve ter ao menos 48 caracteres não previsíveis.",
                 path: ["JWT_SECRET"],
             });
         }
         if (!environment.DB_SSL || !environment.DB_SSL_REJECT_UNAUTHORIZED) {
             context.addIssue({
                 code: "custom",
-                message: "Em produÃƒÂ§ÃƒÂ£o, a conexÃƒÂ£o PostgreSQL deve validar TLS.",
+                message: "Em produção, a conexão PostgreSQL deve validar TLS.",
                 path: ["DB_SSL"],
             });
         }
         if (environment.AUTH_EXPOSE_TOKENS_IN_BODY) {
             context.addIssue({
                 code: "custom",
-                message: "Em produÃƒÂ§ÃƒÂ£o, tokens nÃƒÂ£o podem ser expostos no corpo da resposta.",
+                message: "Em produção, tokens não podem ser expostos no corpo da resposta.",
                 path: ["AUTH_EXPOSE_TOKENS_IN_BODY"],
             });
         }
@@ -188,7 +188,7 @@ if (!parsedEnvironment.success) {
     const issues = parsedEnvironment.error.issues
         .map((issue) => `${issue.path.join(".") || "ambiente"}: ${issue.message}`)
         .join("; ");
-    throw new Error(`ConfiguraÃƒÂ§ÃƒÂ£o de ambiente invÃƒÂ¡lida: ${issues}`);
+    throw new Error(`Configuração de ambiente inválida: ${issues}`);
 }
 
 export const env = parsedEnvironment.data;

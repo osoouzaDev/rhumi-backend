@@ -34,7 +34,7 @@ export interface AuthenticationResult {
 const invalidCredentials = (): AppError => new AppError(
     401,
     "INVALID_CREDENTIALS",
-    "CÃ³digo, e-mail ou senha invÃ¡lidos.",
+    "Código, e-mail ou senha inválidos.",
 );
 
 const timingSafePasswordHash = argon2.hash(
@@ -110,7 +110,7 @@ export class AuthService {
         metadata: SessionMetadata,
     ): Promise<AuthenticationResult> {
         if (!refreshToken) {
-            throw new AppError(401, "REFRESH_TOKEN_REQUIRED", "Refresh token nÃ£o informado.");
+            throw new AppError(401, "REFRESH_TOKEN_REQUIRED", "Refresh token não informado.");
         }
 
         const currentRefreshTokenHash = hashRefreshToken(refreshToken);
@@ -160,7 +160,7 @@ export class AuthService {
         return new AppError(
             401,
             "INVALID_REFRESH_TOKEN",
-            "A sessÃ£o nÃ£o Ã© vÃ¡lida, expirou ou teve reutilizaÃ§Ã£o detectada.",
+            "A sessão não é válida, expirou ou teve reutilização detectada.",
         );
     }
 

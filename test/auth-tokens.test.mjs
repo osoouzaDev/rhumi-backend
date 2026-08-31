@@ -16,7 +16,7 @@ process.env.ACCESS_TOKEN_EXPIRES_IN_SECONDS = "900";
 const tokenModule = await import("../dist/utils/auth-tokens.js");
 const schemaModule = await import("../dist/schemas/auth.schemas.js");
 
-test("cria e valida um access token com usuÃ¡rio e sessÃ£o", () => {
+test("cria e valida um access token com usuário e sessão", () => {
     const userId = "aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa";
     const sessionId = "bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbb";
     const companyId = "cccccccc-cccc-4ccc-8ccc-cccccccccccc";
@@ -30,7 +30,7 @@ test("cria e valida um access token com usuÃ¡rio e sessÃ£o", () => {
     assert.ok(claims.expiresAt > Math.floor(Date.now() / 1_000));
 });
 
-test("gera refresh tokens aleatÃ³rios e armazena apenas hashes determinÃ­sticos", () => {
+test("gera refresh tokens aleatórios e armazena apenas hashes determinísticos", () => {
     const firstToken = tokenModule.createRefreshToken();
     const secondToken = tokenModule.createRefreshToken();
 
@@ -42,7 +42,7 @@ test("gera refresh tokens aleatÃ³rios e armazena apenas hashes determinÃ­sti
     );
 });
 
-test("aceita login por cÃ³digo ou e-mail e rejeita senhas curtas", () => {
+test("aceita login por código ou e-mail e rejeita senhas curtas", () => {
     assert.equal(schemaModule.loginSchema.parse({
         identifier: "ADMIN001",
         password: "strong-password",

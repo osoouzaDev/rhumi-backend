@@ -119,8 +119,8 @@ try {
         method: "POST",
         body: JSON.stringify({
             departmentId,
-            title: `Convite notificÃ¡vel ${suffix}`,
-            description: "Evento temporÃ¡rio para validar a central de pendÃªncias.",
+            title: `Convite notificável ${suffix}`,
+            description: "Evento temporário para validar a central de pendências.",
             eventType: "meeting",
             visibility: "participants",
             startsAt: startsAt.toISOString(),
@@ -164,8 +164,8 @@ try {
         body: JSON.stringify({
             audienceType: "employees",
             employeeIds: [employeeId],
-            title: `Comunicado temporÃ¡rio ${suffix}`,
-            description: "Comunicado criado para validar a entrega individual de notificaÃ§Ãµes.",
+            title: `Comunicado temporário ${suffix}`,
+            description: "Comunicado criado para validar a entrega individual de notificações.",
             priority: "urgent",
         }),
     });
@@ -200,7 +200,7 @@ try {
     assert.equal(history.payload.data.notifications.length, 1);
     assert.ok(history.payload.data.notifications[0].resolvedAt);
 
-    console.log("Fluxo de notificaÃ§Ãµes e pendÃªncias validado com sucesso.");
+    console.log("Fluxo de notificações e pendências validado com sucesso.");
 } finally {
     try {
         if (accessToken) await request("/api/v1/auth/logout", { method: "POST" });

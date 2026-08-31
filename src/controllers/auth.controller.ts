@@ -38,7 +38,7 @@ export const refresh = async (request: Request, response: Response): Promise<voi
 
 export const logout = async (request: Request, response: Response): Promise<void> => {
     if (!request.auth) {
-        throw new AppError(401, "AUTHENTICATION_REQUIRED", "AutenticaÃ§Ã£o obrigatÃ³ria.");
+        throw new AppError(401, "AUTHENTICATION_REQUIRED", "Autenticação obrigatória.");
     }
     await authService.logout(request.auth);
     clearAuthenticationCookies(response);
@@ -47,7 +47,7 @@ export const logout = async (request: Request, response: Response): Promise<void
 
 export const logoutAll = async (request: Request, response: Response): Promise<void> => {
     if (!request.auth) {
-        throw new AppError(401, "AUTHENTICATION_REQUIRED", "AutenticaÃ§Ã£o obrigatÃ³ria.");
+        throw new AppError(401, "AUTHENTICATION_REQUIRED", "Autenticação obrigatória.");
     }
     await authService.logoutAll(request.auth);
     clearAuthenticationCookies(response);
@@ -56,7 +56,7 @@ export const logoutAll = async (request: Request, response: Response): Promise<v
 
 export const me = (request: Request, response: Response): void => {
     if (!request.auth) {
-        throw new AppError(401, "AUTHENTICATION_REQUIRED", "AutenticaÃ§Ã£o obrigatÃ³ria.");
+        throw new AppError(401, "AUTHENTICATION_REQUIRED", "Autenticação obrigatória.");
     }
 
     response.json({

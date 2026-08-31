@@ -47,4 +47,3 @@ export const authenticationPayload = (authentication: AuthenticationResult) => (
             user: authentication.user,
         }
 );
-

@@ -87,9 +87,9 @@ try {
         body: JSON.stringify({
             departmentId,
             code: `TEST-${suffix}`,
-            title: `Treinamento temporÃ¡rio ${suffix}`,
-            description: "Treinamento temporÃ¡rio criado para validar o fluxo completo do mÃ³dulo.",
-            objectives: "Validar catÃ¡logo, turmas, inscriÃ§Ãµes, prova e resultado.",
+            title: `Treinamento temporário ${suffix}`,
+            description: "Treinamento temporário criado para validar o fluxo completo do módulo.",
+            objectives: "Validar catálogo, turmas, inscrições, prova e resultado.",
             instructor: "Instrutor de Teste",
             modality: "online",
             workloadMinutes: 60,
@@ -106,12 +106,12 @@ try {
     const exam = await request(`/api/v1/trainings/${created.trainingId}/exam`, {
         method: "PUT",
         body: JSON.stringify({
-            title: "AvaliaÃ§Ã£o temporÃ¡ria",
+            title: "Avaliação temporária",
             passingScore: 70,
             maxAttempts: 2,
             published: true,
             questions: [{
-                prompt: "O RHumi centraliza processos de gestÃ£o de pessoas?",
+                prompt: "O RHumi centraliza processos de gestão de pessoas?",
                 questionType: "true_false",
                 points: 1,
                 options: [
@@ -131,7 +131,7 @@ try {
         method: "POST",
         body: JSON.stringify({
             departmentId,
-            name: `Turma temporÃ¡ria ${suffix}`,
+            name: `Turma temporária ${suffix}`,
             status: "open",
             startsAt: startsAt.toISOString(),
             endsAt: endsAt.toISOString(),

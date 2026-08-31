@@ -14,7 +14,7 @@ const encryptionKey = env.MFA_ENCRYPTION_KEY
 
 const requireEncryptionKey = (): Buffer => {
     if (!env.MFA_ENABLED || !encryptionKey || encryptionKey.length !== 32) {
-        throw new Error("MFA nÃ£o estÃ¡ configurado neste ambiente.");
+        throw new Error("MFA não está configurado neste ambiente.");
     }
     return encryptionKey;
 };
@@ -80,7 +80,7 @@ export const decryptMfaSecret = (encryptedSecret: string): string => {
         || !authenticationTag
         || !encrypted
     ) {
-        throw new Error("Segredo MFA criptografado invÃ¡lido.");
+        throw new Error("Segredo MFA criptografado inválido.");
     }
 
     const decipher = createDecipheriv(

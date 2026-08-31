@@ -152,4 +152,3 @@ void provisionApplicationRole()
         await closeMigrationDatabase();
         process.exit(1);
     });
-

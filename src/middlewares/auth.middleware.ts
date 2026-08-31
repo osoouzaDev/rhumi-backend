@@ -24,7 +24,7 @@ const parseAccessToken = (token: string): AccessTokenClaims => {
         throw new AppError(
             401,
             "INVALID_ACCESS_TOKEN",
-            "Token de acesso invÃ¡lido ou expirado.",
+            "Token de acesso inválido ou expirado.",
         );
     }
 };
@@ -37,7 +37,7 @@ export const authenticate = async (
     try {
         const token = extractAccessToken(request);
         if (!token) {
-            throw new AppError(401, "AUTHENTICATION_REQUIRED", "AutenticaÃ§Ã£o obrigatÃ³ria.");
+            throw new AppError(401, "AUTHENTICATION_REQUIRED", "Autenticação obrigatória.");
         }
 
         const claims = parseAccessToken(token);
@@ -51,7 +51,7 @@ export const authenticate = async (
                 throw new AppError(
                     401,
                     "INVALID_SESSION",
-                    "A sessÃ£o nÃ£o Ã© vÃ¡lida ou expirou.",
+                    "A sessão não é válida ou expirou.",
                 );
             }
 
@@ -69,7 +69,7 @@ export const authorize = (...requiredPermissions: string[]): RequestHandler => (
     next,
 ) => {
     if (!request.auth) {
-        next(new AppError(401, "AUTHENTICATION_REQUIRED", "AutenticaÃ§Ã£o obrigatÃ³ria."));
+        next(new AppError(401, "AUTHENTICATION_REQUIRED", "Autenticação obrigatória."));
         return;
     }
 
@@ -81,7 +81,7 @@ export const authorize = (...requiredPermissions: string[]): RequestHandler => (
         next(new AppError(
             403,
             "INSUFFICIENT_PERMISSION",
-            "VocÃª nÃ£o possui permissÃ£o para executar esta operaÃ§Ã£o.",
+            "Você não possui permissão para executar esta operação.",
             { missingPermissions },
         ));
         return;

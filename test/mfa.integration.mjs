@@ -90,7 +90,7 @@ try {
         const department = await client.query(
             `INSERT INTO departments (company_id, name, acronym)
              VALUES ($1, $2, $3) RETURNING id`,
-            [created.companyId, `SeguranÃ§a ${suffix}`, `M${suffix.slice(-5)}`],
+            [created.companyId, `Segurança ${suffix}`, `M${suffix.slice(-5)}`],
         );
         created.departmentId = department.rows[0].id;
         const position = await client.query(
@@ -237,7 +237,7 @@ try {
     assert.equal(loginAfterDisable.response.status, 200);
     assert.ok(loginAfterDisable.payload.data.accessToken);
 
-    console.log("Fluxo de MFA, recuperaÃ§Ã£o e proteÃ§Ã£o contra replay validado com sucesso.");
+    console.log("Fluxo de MFA, recuperação e proteção contra replay validado com sucesso.");
 } finally {
     try {
         await cleanup();

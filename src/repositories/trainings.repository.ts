@@ -1419,5 +1419,3 @@ export class TrainingsRepository {
 }
 
 export const trainingsRepository = new TrainingsRepository();
-
-

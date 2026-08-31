@@ -11,7 +11,7 @@ const startServer = async (): Promise<void> => {
     await Promise.all([connectToDatabase(), connectToRedis()]);
 
     server = app.listen(env.PORT, () => {
-        console.log(`RHumi API disponÃƒÂ­vel em http://localhost:${env.PORT}`);
+        console.log(`RHumi API disponível em http://localhost:${env.PORT}`);
     });
     server.requestTimeout = env.REQUEST_TIMEOUT_MS;
     server.headersTimeout = env.HEADERS_TIMEOUT_MS;
@@ -23,7 +23,7 @@ const shutdown = async (signal: string): Promise<void> => {
     }
 
     shuttingDown = true;
-    console.log(`Encerrando a RHumi API apÃƒÂ³s ${signal}...`);
+    console.log(`Encerrando a RHumi API após ${signal}...`);
 
     if (server) {
         await new Promise<void>((resolve, reject) => {
@@ -39,13 +39,13 @@ for (const signal of ["SIGINT", "SIGTERM"] as const) {
         void shutdown(signal)
             .then(() => process.exit(0))
             .catch((error) => {
-                console.error("Falha ao encerrar a aplicaÃƒÂ§ÃƒÂ£o:", error);
+                console.error("Falha ao encerrar a aplicação:", error);
                 process.exit(1);
             });
     });
 }
 
 void startServer().catch((error) => {
-    console.error("NÃƒÂ£o foi possÃƒÂ­vel iniciar a RHumi API:", error);
+    console.error("Não foi possível iniciar a RHumi API:", error);
     process.exit(1);
 });

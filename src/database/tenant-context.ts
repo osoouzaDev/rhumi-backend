@@ -14,4 +14,3 @@ export const runWithTenantContext = <T>(
 export const getTenantCompanyId = (): string | undefined => (
     tenantStorage.getStore()?.companyId
 );
-

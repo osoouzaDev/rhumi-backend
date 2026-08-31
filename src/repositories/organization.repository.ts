@@ -661,5 +661,3 @@ export class OrganizationRepository {
 }
 
 export const organizationRepository = new OrganizationRepository();
-
-

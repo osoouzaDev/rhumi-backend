@@ -82,8 +82,8 @@ try {
         body: JSON.stringify({
             departmentId: department.id,
             positionId: position.id,
-            title: `Vaga temporÃ¡ria ${suffix}`,
-            description: "Vaga temporÃ¡ria criada exclusivamente para teste automatizado de integraÃ§Ã£o.",
+            title: `Vaga temporária ${suffix}`,
+            description: "Vaga temporária criada exclusivamente para teste automatizado de integração.",
             contractType: "clt",
             workModel: "remote",
             status: "open",
@@ -94,7 +94,7 @@ try {
     const candidate = await request("/api/v1/recruitment/candidates", {
         method: "POST",
         body: JSON.stringify({
-            fullName: "Candidato TemporÃ¡rio",
+            fullName: "Candidato Temporário",
             email: `codex-smoke-${suffix}@example.com`,
             source: "integration-test",
         }),
@@ -112,7 +112,7 @@ try {
 
     await request(`/api/v1/recruitment/applications/${created.applicationId}`, {
         method: "PATCH",
-        body: JSON.stringify({ stage: "screening", stageNotes: "Teste de movimentaÃ§Ã£o" }),
+        body: JSON.stringify({ stage: "screening", stageNotes: "Teste de movimentação" }),
     });
     const board = await request(`/api/v1/recruitment/vacancies/${created.vacancyId}/board`);
     const screening = board.payload.data.board.columns.find((column) => column.stage === "screening");

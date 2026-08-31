@@ -428,7 +428,7 @@ export class DevelopmentPlansRepository {
                             action.resourceUrl ?? null, action.managerNotes ?? null],
                     );
                     const actionId = actionResult.rows[0]?.id;
-                    if (!actionId) throw new Error("Falha ao criar aÃ§Ã£o do PDI.");
+                    if (!actionId) throw new Error("Falha ao criar ação do PDI.");
                     if (action.actionType === "training" && action.trainingId) {
                         await this.linkTraining(client, context.companyId, input.employeeId,
                             action.trainingId, input.startsOn, actionId, actor.userId);
@@ -510,11 +510,11 @@ export class DevelopmentPlansRepository {
                 starts_at, ends_at, all_day, timezone, created_by, updated_by
              ) VALUES ($1, $2, $3, 'meeting', 'participants', 'scheduled',
                 $4, $5, FALSE, 'America/Cuiaba', $6, $6) RETURNING id`,
-            [context.companyId, `PDI â€” ${title}`,
+            [context.companyId, `PDI — ${title}`,
                 `${description}\n\nPlano: ${input.title}`, startsAt, endsAt, userId],
         );
         const eventId = result.rows[0]?.id;
-        if (!eventId) throw new Error("Falha ao criar mentoria no calendÃ¡rio.");
+        if (!eventId) throw new Error("Falha ao criar mentoria no calendário.");
         await client.query(
             `INSERT INTO calendar_event_attendees (event_id, employee_id)
              SELECT $1, employee_id FROM UNNEST($2::UUID[]) employee_id
@@ -656,5 +656,3 @@ export class DevelopmentPlansRepository {
 }
 
 export const developmentPlansRepository = new DevelopmentPlansRepository();
-
-

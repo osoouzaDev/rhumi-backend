@@ -52,4 +52,3 @@ export const checkRedisHealth = async (): Promise<"up" | "disabled"> => {
     await redisClient.ping();
     return "up";
 };
-

@@ -83,8 +83,8 @@ try {
         body: JSON.stringify({
             departmentId,
             code: `PERFORMANCE-${suffix}`,
-            name: `AvaliaÃƒÂ§ÃƒÂ£o temporÃƒÂ¡ria ${suffix}`,
-            description: "Ciclo temporÃƒÂ¡rio criado para validar o fluxo completo de desempenho.",
+            name: `Avaliação temporária ${suffix}`,
+            description: "Ciclo temporário criado para validar o fluxo completo de desempenho.",
             status: "active",
             startsOn: dateFromToday(-1),
             selfReviewDeadline: dateFromToday(5),
@@ -93,10 +93,10 @@ try {
             selfWeight: 30,
             managerWeight: 70,
             competencies: [
-                { name: "ColaboraÃƒÂ§ÃƒÂ£o", category: "behavioral", weight: 40,
+                { name: "Colaboração", category: "behavioral", weight: 40,
                     description: "Colabora com a equipe e compartilha conhecimentos relevantes." },
                 { name: "Qualidade das entregas", category: "technical", weight: 60,
-                    description: "Entrega resultados com qualidade, consistÃƒÂªncia e previsibilidade." },
+                    description: "Entrega resultados com qualidade, consistência e previsibilidade." },
             ],
         }),
     });
@@ -134,11 +134,11 @@ try {
         body: JSON.stringify({
             responses: [
                 { competencyId: competencies[0].id, score: 4,
-                    comment: "Mantive boa colaboraÃƒÂ§ÃƒÂ£o ao longo do ciclo." },
+                    comment: "Mantive boa colaboração ao longo do ciclo." },
                 { competencyId: competencies[1].id, score: 5,
-                    comment: "As entregas mantiveram o padrÃƒÂ£o esperado." },
+                    comment: "As entregas mantiveram o padrão esperado." },
             ],
-            employeeSummary: "PerÃƒÂ­odo positivo, com evoluÃƒÂ§ÃƒÂ£o tÃƒÂ©cnica e boa colaboraÃƒÂ§ÃƒÂ£o.",
+            employeeSummary: "Período positivo, com evolução técnica e boa colaboração.",
         }),
     });
     assert.equal(selfReview.payload.data.assignment.status, "manager_review");
@@ -150,12 +150,12 @@ try {
             body: JSON.stringify({
                 responses: [
                     { competencyId: competencies[0].id, score: 5,
-                        comment: "Excelente integraÃƒÂ§ÃƒÂ£o com a equipe." },
+                        comment: "Excelente integração com a equipe." },
                     { competencyId: competencies[1].id, score: 4,
                         comment: "Boas entregas e oportunidade de melhorar estimativas." },
                 ],
-                strengths: "ColaboraÃƒÂ§ÃƒÂ£o consistente e responsabilidade com os resultados.",
-                improvementPoints: "Pode aperfeiÃƒÂ§oar a previsibilidade das estimativas de entrega.",
+                strengths: "Colaboração consistente e responsabilidade com os resultados.",
+                improvementPoints: "Pode aperfeiçoar a previsibilidade das estimativas de entrega.",
                 developmentActions: "Acompanhar a meta e revisar o planejamento semanalmente.",
             }),
         },
@@ -191,7 +191,7 @@ try {
         `/api/v1/evaluations/assignments/${created.assignmentId}/feedback/complete`, {
             method: "POST",
             body: JSON.stringify({
-                finalFeedback: "Feedback realizado com alinhamento das forÃƒÂ§as, oportunidades e prÃƒÂ³ximos passos.",
+                finalFeedback: "Feedback realizado com alinhamento das forças, oportunidades e próximos passos.",
             }),
         },
     );
@@ -203,7 +203,7 @@ try {
     const dashboard = await request("/api/v1/dashboard");
     assert.ok(dashboard.payload.data.dashboard.evaluations);
 
-    console.log("Fluxo de avaliaÃƒÂ§ÃƒÂµes de desempenho validado com sucesso.");
+    console.log("Fluxo de avaliações de desempenho validado com sucesso.");
 } finally {
     try {
         if (accessToken) await request("/api/v1/auth/logout", { method: "POST" });

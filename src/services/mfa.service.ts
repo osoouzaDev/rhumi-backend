@@ -192,7 +192,7 @@ export class MfaService {
             throw new AppError(
                 409,
                 "MFA_SETUP_NOT_STARTED",
-                "Inicie a configuraÃ§Ã£o do MFA antes de confirmÃ¡-la.",
+                "Inicie a configuração do MFA antes de confirmá-la.",
             );
         }
         const secret = decryptMfaSecret(settings.pendingSecretEncrypted);
@@ -211,7 +211,7 @@ export class MfaService {
             throw new AppError(
                 409,
                 "MFA_SETUP_NOT_STARTED",
-                "A configuraÃ§Ã£o pendente do MFA nÃ£o foi encontrada.",
+                "A configuração pendente do MFA não foi encontrada.",
             );
         }
         return { recoveryCodes };
@@ -240,7 +240,7 @@ export class MfaService {
         if (!verification.valid) throw this.invalidMfaCode();
 
         if (!await mfaRepository.disable(context)) {
-            throw new AppError(409, "MFA_NOT_ENABLED", "O MFA nÃ£o estÃ¡ habilitado.");
+            throw new AppError(409, "MFA_NOT_ENABLED", "O MFA não está habilitado.");
         }
     }
 
@@ -280,7 +280,7 @@ export class MfaService {
             throw new AppError(
                 503,
                 "MFA_NOT_CONFIGURED",
-                "O MFA nÃ£o estÃ¡ disponÃ­vel neste ambiente.",
+                "O MFA não está disponível neste ambiente.",
             );
         }
     }
@@ -289,7 +289,7 @@ export class MfaService {
         return new AppError(
             401,
             "INVALID_MFA_CODE",
-            "O cÃ³digo de autenticaÃ§Ã£o multifator Ã© invÃ¡lido.",
+            "O código de autenticação multifator é inválido.",
         );
     }
 
@@ -297,7 +297,7 @@ export class MfaService {
         return new AppError(
             401,
             "INVALID_MFA_CHALLENGE",
-            "O desafio MFA Ã© invÃ¡lido ou expirou.",
+            "O desafio MFA é inválido ou expirou.",
         );
     }
 }

@@ -404,5 +404,3 @@ export class ApplicationsRepository {
 }
 
 export const applicationsRepository = new ApplicationsRepository();
-
-

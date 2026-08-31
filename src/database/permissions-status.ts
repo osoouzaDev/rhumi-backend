@@ -114,4 +114,3 @@ showPermissionStatus()
         process.exitCode = 1;
     })
     .finally(closeDatabase);
-

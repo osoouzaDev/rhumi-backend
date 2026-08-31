@@ -15,7 +15,7 @@ after(() => new Promise((resolve, reject) => {
     server.closeAllConnections();
 }));
 
-test("aplica cabeÃ§alhos HTTP seguros e nÃ£o revela a tecnologia", async () => {
+test("aplica cabeçalhos HTTP seguros e não revela a tecnologia", async () => {
     const response = await fetch(baseUrl, {
         headers: { "x-request-id": "identificador-controlado-pelo-cliente" },
     });
@@ -38,7 +38,7 @@ test("impede cache de respostas da API", async () => {
     assert.equal(response.headers.get("pragma"), "no-cache");
 });
 
-test("aceita somente origens CORS confiÃ¡veis", async () => {
+test("aceita somente origens CORS confiáveis", async () => {
     const allowed = await fetch(baseUrl, {
         headers: { origin: "http://localhost:3000" },
     });
@@ -56,7 +56,7 @@ test("aceita somente origens CORS confiÃ¡veis", async () => {
     assert.equal(payload.error.code, "UNTRUSTED_REQUEST_ORIGIN");
 });
 
-test("exige origem em mutaÃ§Ãµes autenticadas somente por cookie", async () => {
+test("exige origem em mutações autenticadas somente por cookie", async () => {
     const response = await fetch(`${baseUrl}/api/v1/auth/logout`, {
         method: "POST",
         headers: { cookie: "access_token=fake-token" },
@@ -66,7 +66,7 @@ test("exige origem em mutaÃ§Ãµes autenticadas somente por cookie", async () 
     assert.equal(payload.error.code, "REQUEST_ORIGIN_REQUIRED");
 });
 
-test("limita tentativas repetidas de login por endereÃ§o de origem", async () => {
+test("limita tentativas repetidas de login por endereço de origem", async () => {
     let lastResponse;
     for (let attempt = 0; attempt <= 10; attempt += 1) {
         lastResponse = await fetch(`${baseUrl}/api/v1/auth/login`, {

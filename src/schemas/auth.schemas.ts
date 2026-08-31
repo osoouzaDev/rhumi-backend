@@ -13,11 +13,11 @@ export type LoginInput = z.infer<typeof loginSchema>;
 
 const mfaCodeSchema = z.string().trim().min(6).max(32).regex(
     /^(?:\d{6}|[A-Fa-f0-9]{6}(?:-?[A-Fa-f0-9]{6}){2})$/,
-    "CÃ³digo MFA invÃ¡lido.",
+    "Código MFA inválido.",
 );
 
 export const confirmMfaSetupSchema = z.object({
-    code: z.string().trim().regex(/^\d{6}$/, "CÃ³digo TOTP invÃ¡lido."),
+    code: z.string().trim().regex(/^\d{6}$/, "Código TOTP inválido."),
 }).strict();
 
 export const verifyMfaLoginSchema = z.object({

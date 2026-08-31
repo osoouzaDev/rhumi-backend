@@ -66,8 +66,8 @@ try {
         method: "POST",
         body: JSON.stringify({
             departmentId,
-            title: `Evento temporÃ¡rio ${suffix}`,
-            description: "Evento criado exclusivamente para o teste integrado do calendÃ¡rio.",
+            title: `Evento temporário ${suffix}`,
+            description: "Evento criado exclusivamente para o teste integrado do calendário.",
             eventType: "meeting",
             visibility: "department",
             location: "Sala de teste",
@@ -107,7 +107,7 @@ try {
     const removed = await request(`/api/v1/calendar/events/${eventId}`, { method: "DELETE" });
     assert.equal(removed.response.status, 204);
 
-    console.log("Fluxo do calendÃ¡rio corporativo validado com sucesso.");
+    console.log("Fluxo do calendário corporativo validado com sucesso.");
 } finally {
     try {
         if (accessToken) {

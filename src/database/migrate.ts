@@ -41,7 +41,7 @@ const migrate = async (): Promise<void> => {
 
             if (appliedChecksum) {
                 if (appliedChecksum !== checksum) {
-                    throw new Error(`A migraÃ§Ã£o jÃ¡ aplicada ${filename} foi modificada.`);
+                    throw new Error(`A migração já aplicada ${filename} foi modificada.`);
                 }
 
                 continue;
@@ -55,7 +55,7 @@ const migrate = async (): Promise<void> => {
                     [filename, checksum],
                 );
                 await client.query("COMMIT");
-                console.log(`MigraÃ§Ã£o aplicada: ${filename}`);
+                console.log(`Migração aplicada: ${filename}`);
             } catch (error) {
                 await client.query("ROLLBACK");
                 throw error;
@@ -73,7 +73,7 @@ void migrate()
         await closeMigrationDatabase();
     })
     .catch(async (error) => {
-        console.error("Falha ao executar as migraÃ§Ãµes:", error);
+        console.error("Falha ao executar as migrações:", error);
         await closeMigrationDatabase();
         process.exit(1);
     });

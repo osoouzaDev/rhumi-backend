@@ -93,7 +93,7 @@ CREATE TRIGGER notifications_set_updated_at
     FOR EACH ROW EXECUTE FUNCTION set_updated_at();
 
 INSERT INTO permissions (code, module, action, description) VALUES
-    ('notifications.read', 'notifications', 'read', 'Consultar e organizar as prÃ³prias notificaÃ§Ãµes'),
+    ('notifications.read', 'notifications', 'read', 'Consultar e organizar as próprias notificações'),
     ('notifications.manage', 'notifications', 'manage', 'Publicar comunicados internos')
 ON CONFLICT (code) DO NOTHING;
 
@@ -110,5 +110,3 @@ FROM roles
 JOIN permissions ON permissions.code = 'notifications.manage'
 WHERE LOWER(roles.code) IN ('administrator', 'supervisor')
 ON CONFLICT DO NOTHING;
-
-

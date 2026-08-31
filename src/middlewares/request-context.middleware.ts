@@ -17,4 +17,3 @@ export const attachRequestContext = (
     response.setHeader("x-request-id", requestId);
     next();
 };
-

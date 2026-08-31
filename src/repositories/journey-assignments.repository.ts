@@ -700,5 +700,3 @@ export class JourneyAssignmentsRepository {
 }
 
 export const journeyAssignmentsRepository = new JourneyAssignmentsRepository();
-
-

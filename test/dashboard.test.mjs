@@ -99,15 +99,9 @@ after(() => new Promise((resolve, reject) => {
     server.close((error) => error ? reject(error) : resolve());
 }));
 
-test("protege o dashboard sem autenticaÃƒÆ’Ã‚Â§ÃƒÆ’Ã‚Â£o", async () => {
+test("protege o dashboard sem autenticação", async () => {
     const response = await fetch(`${baseUrl}/api/v1/dashboard`);
     const payload = await response.json();
     assert.equal(response.status, 401);
     assert.equal(payload.error.code, "AUTHENTICATION_REQUIRED");
 });
-
-
-
-
-
-

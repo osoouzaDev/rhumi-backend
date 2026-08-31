@@ -175,5 +175,3 @@ FROM roles
 JOIN permissions ON permissions.code = 'evaluations.self.respond'
 WHERE LOWER(roles.code) IN ('administrator', 'supervisor', 'collaborator')
 ON CONFLICT DO NOTHING;
-
-

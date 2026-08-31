@@ -7,7 +7,7 @@ export const notFoundHandler: RequestHandler = (request, response) => {
     response.status(404).json({
         error: {
             code: "ROUTE_NOT_FOUND",
-            message: `Rota ${request.method} ${request.path} nÃ£o encontrada.`,
+            message: `Rota ${request.method} ${request.path} não encontrada.`,
             requestId: request.requestId,
         },
     });
@@ -36,7 +36,7 @@ export const errorHandler: ErrorRequestHandler = (
         response.status(422).json({
             error: {
                 code: "VALIDATION_ERROR",
-                message: "Os dados enviados sÃ£o invÃ¡lidos.",
+                message: "Os dados enviados são inválidos.",
                 details: error.flatten(),
                 requestId: request.requestId,
             },
@@ -56,7 +56,7 @@ export const errorHandler: ErrorRequestHandler = (
         return;
     }
 
-    console.error("Erro nÃ£o tratado na API:", {
+    console.error("Erro não tratado na API:", {
         requestId: request.requestId,
         method: request.method,
         path: request.path,

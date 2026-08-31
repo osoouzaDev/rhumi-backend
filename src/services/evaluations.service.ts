@@ -29,13 +29,13 @@ import type {
 import { hasDatabaseConstraint } from "../utils/database-errors.js";
 
 const cycleNotFound = (): AppError => new AppError(
-    404, "EVALUATION_CYCLE_NOT_FOUND", "Ciclo de avaliaÃ§Ã£o nÃ£o encontrado.",
+    404, "EVALUATION_CYCLE_NOT_FOUND", "Ciclo de avaliação não encontrado.",
 );
 const assignmentNotFound = (): AppError => new AppError(
-    404, "EVALUATION_ASSIGNMENT_NOT_FOUND", "AvaliaÃ§Ã£o atribuÃ­da nÃ£o encontrada.",
+    404, "EVALUATION_ASSIGNMENT_NOT_FOUND", "Avaliação atribuída não encontrada.",
 );
 const goalNotFound = (): AppError => new AppError(
-    404, "PERFORMANCE_GOAL_NOT_FOUND", "Meta de desempenho nÃ£o encontrada.",
+    404, "PERFORMANCE_GOAL_NOT_FOUND", "Meta de desempenho não encontrada.",
 );
 const isAdministrator = (context: AuthenticationContext): boolean => (
     context.roles.includes("administrator")
@@ -70,7 +70,7 @@ export class EvaluationsService {
         } catch (error) {
             if (hasDatabaseConstraint(error, "evaluation_cycles_code_per_company_unique")) {
                 throw new AppError(409, "EVALUATION_CYCLE_CODE_ALREADY_EXISTS",
-                    "JÃ¡ existe um ciclo de avaliaÃ§Ã£o com este cÃ³digo.");
+                    "Já existe um ciclo de avaliação com este código.");
             }
             throw error;
         }
@@ -93,27 +93,27 @@ export class EvaluationsService {
             && dates.selfReviewDeadline <= dates.managerReviewDeadline
             && dates.managerReviewDeadline <= dates.feedbackDeadline)) {
             throw new AppError(422, "INVALID_EVALUATION_CYCLE_DATES",
-                "As datas do ciclo de avaliaÃ§Ã£o estÃ£o fora de ordem.");
+                "As datas do ciclo de avaliação estão fora de ordem.");
         }
         const selfWeight = input.selfWeight ?? current.selfWeight;
         const managerWeight = input.managerWeight ?? current.managerWeight;
         if (Math.abs(selfWeight + managerWeight - 100) >= 0.001) {
             throw new AppError(422, "INVALID_EVALUATION_REVIEW_WEIGHTS",
-                "Os pesos da autoavaliaÃ§Ã£o e do gestor devem somar 100.");
+                "Os pesos da autoavaliação e do gestor devem somar 100.");
         }
         if (input.competencies && current.assignmentCount > 0) {
             throw new AppError(409, "EVALUATION_CYCLE_ALREADY_ASSIGNED",
-                "As competÃªncias de um ciclo jÃ¡ atribuÃ­do nÃ£o podem ser alteradas.",
+                "As competências de um ciclo já atribuído não podem ser alteradas.",
                 { assignmentCount: current.assignmentCount });
         }
         if (input.status === "completed"
             && current.completedAssignmentCount !== current.assignmentCount) {
             throw new AppError(409, "EVALUATION_CYCLE_HAS_PENDING_ASSIGNMENTS",
-                "Todas as avaliaÃ§Ãµes precisam ser concluÃ­das antes de finalizar o ciclo.");
+                "Todas as avaliações precisam ser concluídas antes de finalizar o ciclo.");
         }
         if (input.status === "cancelled" && current.assignmentCount > 0) {
             throw new AppError(409, "EVALUATION_CYCLE_HAS_ASSIGNMENTS",
-                "Cancele as avaliaÃ§Ãµes atribuÃ­das antes de cancelar o ciclo.");
+                "Cancele as avaliações atribuídas antes de cancelar o ciclo.");
         }
         let departmentId: string | null | undefined;
         if (input.departmentId !== undefined) {
@@ -127,7 +127,7 @@ export class EvaluationsService {
         } catch (error) {
             if (hasDatabaseConstraint(error, "evaluation_cycles_code_per_company_unique")) {
                 throw new AppError(409, "EVALUATION_CYCLE_CODE_ALREADY_EXISTS",
-                    "JÃ¡ existe um ciclo de avaliaÃ§Ã£o com este cÃ³digo.");
+                    "Já existe um ciclo de avaliação com este código.");
             }
             throw error;
         }
@@ -140,7 +140,7 @@ export class EvaluationsService {
         this.assertCanManageDepartment(context, cycle.departmentId);
         if (cycle.assignmentCount > 0) {
             throw new AppError(409, "EVALUATION_CYCLE_HAS_ASSIGNMENTS",
-                "O ciclo possui avaliaÃ§Ãµes atribuÃ­das e nÃ£o pode ser arquivado.");
+                "O ciclo possui avaliações atribuídas e não pode ser arquivado.");
         }
         if (!await evaluationCyclesRepository.archive(context.companyId, cycleId, actor)) {
             throw cycleNotFound();
@@ -183,7 +183,7 @@ export class EvaluationsService {
             this.assertEmployeeScope(context, employee);
             if (cycle.departmentId && employee.departmentId !== cycle.departmentId) {
                 throw new AppError(422, "EVALUATION_EMPLOYEE_DEPARTMENT_MISMATCH",
-                    "O colaborador nÃ£o pertence ao departamento do ciclo.");
+                    "O colaborador não pertence ao departamento do ciclo.");
             }
             if (evaluator.departmentId !== employee.departmentId) {
                 throw new AppError(422, "EVALUATION_EVALUATOR_DEPARTMENT_MISMATCH",
@@ -204,7 +204,7 @@ export class EvaluationsService {
         const assignment = await this.getAssignment(context, assignmentId);
         if (assignment.status === "completed") {
             throw new AppError(409, "EVALUATION_ASSIGNMENT_COMPLETED",
-                "Uma avaliaÃ§Ã£o concluÃ­da nÃ£o pode ser cancelada.");
+                "Uma avaliação concluída não pode ser cancelada.");
         }
         if (!await evaluationAssignmentsRepository.cancelAssignment(
             context.companyId, assignmentId, actor,
@@ -219,11 +219,11 @@ export class EvaluationsService {
         this.assertEvaluator(context, assignment);
         if (assignment.cycleStatus !== "active") {
             throw new AppError(409, "EVALUATION_CYCLE_NOT_ACTIVE",
-                "O ciclo precisa estar ativo para receber avaliaÃ§Ãµes.");
+                "O ciclo precisa estar ativo para receber avaliações.");
         }
         if (assignment.status !== "manager_review") {
             throw new AppError(409, "EVALUATION_MANAGER_REVIEW_NOT_AVAILABLE",
-                "A autoavaliaÃ§Ã£o precisa ser enviada antes da avaliaÃ§Ã£o do gestor.");
+                "A autoavaliação precisa ser enviada antes da avaliação do gestor.");
         }
         await this.validateCompleteResponses(context, assignment.cycleId, input.responses);
         if (!await evaluationAssignmentsRepository.submitManagerReview(
@@ -240,11 +240,11 @@ export class EvaluationsService {
         this.assertEvaluator(context, assignment);
         if (assignment.status !== "feedback_pending") {
             throw new AppError(409, "EVALUATION_FEEDBACK_NOT_AVAILABLE",
-                "O feedback sÃ³ pode ser agendado apÃ³s a avaliaÃ§Ã£o do gestor.");
+                "O feedback só pode ser agendado após a avaliação do gestor.");
         }
         if (input.startsAt.slice(0, 10) > assignment.feedbackDeadline) {
             throw new AppError(422, "EVALUATION_FEEDBACK_AFTER_DEADLINE",
-                "A reuniÃ£o de feedback nÃ£o pode ultrapassar o prazo do ciclo.");
+                "A reunião de feedback não pode ultrapassar o prazo do ciclo.");
         }
         await evaluationAssignmentsRepository.scheduleFeedback(assignment, input, actor);
         return this.getAssignment(context, assignmentId);
@@ -258,11 +258,11 @@ export class EvaluationsService {
         this.assertEvaluator(context, assignment);
         if (assignment.status !== "feedback_pending") {
             throw new AppError(409, "EVALUATION_FEEDBACK_NOT_AVAILABLE",
-                "A avaliaÃ§Ã£o nÃ£o estÃ¡ aguardando feedback.");
+                "A avaliação não está aguardando feedback.");
         }
         if (!assignment.feedbackEventId) {
             throw new AppError(409, "EVALUATION_FEEDBACK_NOT_SCHEDULED",
-                "Agende a reuniÃ£o de feedback antes de concluir a avaliaÃ§Ã£o.");
+                "Agende a reunião de feedback antes de concluir a avaliação.");
         }
         if (!await evaluationAssignmentsRepository.completeFeedback(
             context.companyId, assignmentId, input.finalFeedback, actor,
@@ -279,7 +279,7 @@ export class EvaluationsService {
         this.assertAssignmentOpen(assignment);
         if (input.targetDate < assignment.startsOn) {
             throw new AppError(422, "PERFORMANCE_GOAL_BEFORE_CYCLE",
-                "A data da meta nÃ£o pode ser anterior ao inÃ­cio do ciclo.");
+                "A data da meta não pode ser anterior ao início do ciclo.");
         }
         this.assertGoalWeight(assignment, input.weight);
         const id = await evaluationAssignmentsRepository.createGoal(
@@ -298,7 +298,7 @@ export class EvaluationsService {
         const current = this.requireGoal(assignment, goalId);
         if (input.targetDate && input.targetDate < assignment.startsOn) {
             throw new AppError(422, "PERFORMANCE_GOAL_BEFORE_CYCLE",
-                "A data da meta nÃ£o pode ser anterior ao inÃ­cio do ciclo.");
+                "A data da meta não pode ser anterior ao início do ciclo.");
         }
         if (input.weight !== undefined) this.assertGoalWeight(assignment, input.weight, current.id);
         if (!await evaluationAssignmentsRepository.updateGoal(
@@ -353,12 +353,12 @@ export class EvaluationsService {
         if (!assignment) throw assignmentNotFound();
         if (assignment.cycleStatus !== "active") {
             throw new AppError(409, "EVALUATION_CYCLE_NOT_ACTIVE",
-                "O ciclo precisa estar ativo para receber a autoavaliaÃ§Ã£o.");
+                "O ciclo precisa estar ativo para receber a autoavaliação.");
         }
         if (!(["pending", "self_review"] as EvaluationAssignmentDetail["status"][])
             .includes(assignment.status)) {
             throw new AppError(409, "EVALUATION_SELF_REVIEW_NOT_AVAILABLE",
-                "A autoavaliaÃ§Ã£o jÃ¡ foi enviada ou nÃ£o estÃ¡ disponÃ­vel.");
+                "A autoavaliação já foi enviada ou não está disponível.");
         }
         await this.validateCompleteResponses(context, assignment.cycleId, input.responses);
         if (!await evaluationAssignmentsRepository.submitSelfReview(
@@ -397,7 +397,7 @@ export class EvaluationsService {
         if (expected.length !== received.length
             || expected.some((id, index) => id !== received[index])) {
             throw new AppError(422, "EVALUATION_RESPONSES_INCOMPLETE",
-                "Todas as competÃªncias do ciclo precisam ser avaliadas.");
+                "Todas as competências do ciclo precisam ser avaliadas.");
         }
     }
 
@@ -425,7 +425,7 @@ export class EvaluationsService {
         };
         if (!transitions[cycle.status].includes(next)) {
             throw new AppError(409, "INVALID_EVALUATION_CYCLE_TRANSITION",
-                "A alteraÃ§Ã£o de estado do ciclo nÃ£o Ã© permitida.");
+                "A alteração de estado do ciclo não é permitida.");
         }
     }
 
@@ -435,14 +435,14 @@ export class EvaluationsService {
         if (isAdministrator(context)) return;
         if (assignment.evaluatorEmployeeId !== context.employeeId) {
             throw new AppError(403, "EVALUATION_EVALUATOR_REQUIRED",
-                "Somente o avaliador responsÃ¡vel pode executar esta operaÃ§Ã£o.");
+                "Somente o avaliador responsável pode executar esta operação.");
         }
     }
 
     private assertAssignmentOpen(assignment: EvaluationAssignmentDetail): void {
         if (assignment.status === "completed" || assignment.status === "cancelled") {
             throw new AppError(409, "EVALUATION_ASSIGNMENT_FINISHED",
-                "Uma avaliaÃ§Ã£o finalizada nÃ£o pode ser alterada.");
+                "Uma avaliação finalizada não pode ser alterada.");
         }
     }
 
@@ -454,7 +454,7 @@ export class EvaluationsService {
             .reduce((sum, goal) => sum + goal.weight, 0) + weight;
         if (total > 100.001) {
             throw new AppError(422, "PERFORMANCE_GOAL_WEIGHT_EXCEEDED",
-                "A soma dos pesos das metas nÃ£o pode ultrapassar 100.", { total });
+                "A soma dos pesos das metas não pode ultrapassar 100.", { total });
         }
     }
 
@@ -469,7 +469,7 @@ export class EvaluationsService {
     ): void {
         if (departmentId && !isAdministrator(context) && departmentId !== context.departmentId) {
             throw new AppError(403, "EVALUATION_DEPARTMENT_SCOPE_DENIED",
-                "VocÃª sÃ³ pode acessar avaliaÃ§Ãµes do seu departamento.");
+                "Você só pode acessar avaliações do seu departamento.");
         }
     }
 
@@ -479,14 +479,14 @@ export class EvaluationsService {
         if (isAdministrator(context)) return;
         if (departmentId !== context.departmentId) {
             throw new AppError(403, "EVALUATION_MANAGEMENT_SCOPE_DENIED",
-                "VocÃª sÃ³ pode gerenciar ciclos do seu departamento.");
+                "Você só pode gerenciar ciclos do seu departamento.");
         }
     }
 
     private assertEmployeeScope(context: AuthenticationContext, employee: EvaluationEmployee): void {
         if (!isAdministrator(context) && employee.departmentId !== context.departmentId) {
             throw new AppError(403, "EVALUATION_EMPLOYEE_SCOPE_DENIED",
-                "VocÃª sÃ³ pode avaliar colaboradores do seu departamento.");
+                "Você só pode avaliar colaboradores do seu departamento.");
         }
     }
 
@@ -496,16 +496,16 @@ export class EvaluationsService {
         if (!isAdministrator(context) && !requestedDepartmentId) return context.departmentId;
         if (!isAdministrator(context) && requestedDepartmentId !== context.departmentId) {
             throw new AppError(403, "EVALUATION_DEPARTMENT_SCOPE_DENIED",
-                "VocÃª sÃ³ pode gerenciar avaliaÃ§Ãµes do seu departamento.");
+                "Você só pode gerenciar avaliações do seu departamento.");
         }
         if (!requestedDepartmentId) return null;
         const department = await organizationRepository.findDepartment(
             context.companyId, requestedDepartmentId,
         );
         if (!department) throw new AppError(422, "EVALUATION_DEPARTMENT_NOT_FOUND",
-            "O departamento informado nÃ£o existe.");
+            "O departamento informado não existe.");
         if (!department.active) throw new AppError(409, "EVALUATION_DEPARTMENT_INACTIVE",
-            "O departamento informado estÃ¡ inativo.");
+            "O departamento informado está inativo.");
         return requestedDepartmentId;
     }
 
@@ -516,13 +516,11 @@ export class EvaluationsService {
             context.companyId, employeeId,
         );
         if (!employee) throw new AppError(422, "EVALUATION_EMPLOYEE_NOT_FOUND",
-            "O colaborador informado nÃ£o existe.");
+            "O colaborador informado não existe.");
         if (employee.status !== "active") throw new AppError(409, "EVALUATION_EMPLOYEE_INACTIVE",
-            "O colaborador informado nÃ£o estÃ¡ ativo.");
+            "O colaborador informado não está ativo.");
         return employee;
     }
 }
 
 export const evaluationsService = new EvaluationsService();
-
-

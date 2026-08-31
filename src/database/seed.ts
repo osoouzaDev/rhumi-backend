@@ -43,7 +43,7 @@ const seed = async (): Promise<void> => {
         ).rows[0]?.id;
 
         if (!companyId) {
-            throw new Error("NÃ£o foi possÃ­vel localizar ou criar a empresa inicial.");
+            throw new Error("Não foi possível localizar ou criar a empresa inicial.");
         }
 
         const departmentResult = await client.query<IdRow>(
@@ -65,12 +65,12 @@ const seed = async (): Promise<void> => {
         ).rows[0]?.id;
 
         if (!departmentId) {
-            throw new Error("NÃ£o foi possÃ­vel localizar ou criar o departamento inicial.");
+            throw new Error("Não foi possível localizar ou criar o departamento inicial.");
         }
 
         const positionResult = await client.query<IdRow>(
             `INSERT INTO positions (company_id, department_id, title, description)
-             VALUES ($1, $2, 'Administrador de Recursos Humanos', 'AdministraÃ§Ã£o da plataforma RHumi')
+             VALUES ($1, $2, 'Administrador de Recursos Humanos', 'Administração da plataforma RHumi')
              ON CONFLICT DO NOTHING
              RETURNING id`,
             [companyId, departmentId],
@@ -88,7 +88,7 @@ const seed = async (): Promise<void> => {
         ).rows[0]?.id;
 
         if (!positionId) {
-            throw new Error("NÃ£o foi possÃ­vel localizar ou criar o cargo inicial.");
+            throw new Error("Não foi possível localizar ou criar o cargo inicial.");
         }
 
         const employeeResult = await client.query<IdRow>(
@@ -125,7 +125,7 @@ const seed = async (): Promise<void> => {
         ).rows[0]?.id;
 
         if (!employeeId) {
-            throw new Error("NÃ£o foi possÃ­vel localizar ou criar o colaborador administrador.");
+            throw new Error("Não foi possível localizar ou criar o colaborador administrador.");
         }
 
         const userResult = await client.query<IdRow>(

@@ -127,8 +127,8 @@ try {
         method: "POST",
         body: JSON.stringify({
             departmentId,
-            title: `Especialista temporÃ¡rio ${suffix}`,
-            description: "Cargo temporÃ¡rio utilizado para validar a trilha de carreira.",
+            title: `Especialista temporário ${suffix}`,
+            description: "Cargo temporário utilizado para validar a trilha de carreira.",
         }),
     });
     created.targetPositionId = targetPosition.payload.data.position.id;
@@ -139,7 +139,7 @@ try {
             departmentId,
             code: `PDI-TRAINING-${suffix}`,
             title: `Treinamento de carreira ${suffix}`,
-            description: "Treinamento temporÃ¡rio utilizado pelas aÃ§Ãµes do plano de desenvolvimento.",
+            description: "Treinamento temporário utilizado pelas ações do plano de desenvolvimento.",
             modality: "online",
             workloadMinutes: 30,
             materials: [],
@@ -167,16 +167,16 @@ try {
         body: JSON.stringify({
             departmentId,
             code: `PDI-SOURCE-${suffix}`,
-            name: `AvaliaÃ§Ã£o fonte ${suffix}`,
-            description: "AvaliaÃ§Ã£o temporÃ¡ria utilizada como origem do plano de desenvolvimento.",
+            name: `Avaliação fonte ${suffix}`,
+            description: "Avaliação temporária utilizada como origem do plano de desenvolvimento.",
             status: "active",
             startsOn: dateFromToday(-1),
             selfReviewDeadline: dateFromToday(2),
             managerReviewDeadline: dateFromToday(5),
             feedbackDeadline: dateFromToday(10),
             competencies: [{
-                name: "Desenvolvimento tÃ©cnico",
-                description: "Evolui conhecimentos tÃ©cnicos aplicÃ¡veis Ã s responsabilidades do cargo.",
+                name: "Desenvolvimento técnico",
+                description: "Evolui conhecimentos técnicos aplicáveis às responsabilidades do cargo.",
                 category: "technical",
                 weight: 100,
             }],
@@ -194,15 +194,15 @@ try {
     await request(`/api/v1/evaluations/me/${created.evaluationAssignmentId}/self-review`, {
         method: "POST",
         body: JSON.stringify({ responses: [{ competencyId, score: 3,
-            comment: "CompetÃªncia selecionada para desenvolvimento." }] }),
+            comment: "Competência selecionada para desenvolvimento." }] }),
     });
     await request(`/api/v1/evaluations/assignments/${created.evaluationAssignmentId}/manager-review`, {
         method: "POST",
         body: JSON.stringify({
             responses: [{ competencyId, score: 3,
-                comment: "O PDI deve priorizar esta competÃªncia." }],
-            strengths: "Boa capacidade de aprendizado e aplicaÃ§Ã£o prÃ¡tica dos conhecimentos.",
-            improvementPoints: "Precisa aprofundar conhecimentos tÃ©cnicos para o prÃ³ximo nÃ­vel.",
+                comment: "O PDI deve priorizar esta competência." }],
+            strengths: "Boa capacidade de aprendizado e aplicação prática dos conhecimentos.",
+            improvementPoints: "Precisa aprofundar conhecimentos técnicos para o próximo nível.",
             developmentActions: "Concluir treinamento e realizar acompanhamento por mentoria.",
         }),
     });
@@ -220,7 +220,7 @@ try {
     await request(`/api/v1/evaluations/assignments/${created.evaluationAssignmentId}/feedback/complete`, {
         method: "POST",
         body: JSON.stringify({
-            finalFeedback: "AvaliaÃ§Ã£o concluÃ­da com definiÃ§Ã£o de aÃ§Ãµes para o plano de desenvolvimento.",
+            finalFeedback: "Avaliação concluída com definição de ações para o plano de desenvolvimento.",
         }),
     });
 
@@ -229,26 +229,26 @@ try {
         body: JSON.stringify({
             departmentId,
             code: `CAREER-${suffix}`,
-            name: `Trilha tÃ©cnica ${suffix}`,
-            description: "Trilha temporÃ¡ria para validar nÃ­veis, competÃªncias e requisitos de carreira.",
+            name: `Trilha técnica ${suffix}`,
+            description: "Trilha temporária para validar níveis, competências e requisitos de carreira.",
             status: "published",
             levels: [
                 {
                     positionId: currentPositionId,
-                    name: "NÃ­vel atual",
-                    description: "NÃ­vel correspondente ao cargo atual do colaborador.",
-                    competencies: [{ name: "Fundamentos tÃ©cnicos",
-                        description: "Domina os fundamentos necessÃ¡rios ao cargo atual.",
+                    name: "Nível atual",
+                    description: "Nível correspondente ao cargo atual do colaborador.",
+                    competencies: [{ name: "Fundamentos técnicos",
+                        description: "Domina os fundamentos necessários ao cargo atual.",
                         category: "technical", requiredLevel: 3 }],
                 },
                 {
                     positionId: created.targetPositionId,
                     name: "Especialista",
-                    description: "NÃ­vel de referÃªncia tÃ©cnica e apoio ao desenvolvimento da equipe.",
+                    description: "Nível de referência técnica e apoio ao desenvolvimento da equipe.",
                     minimumMonthsExperience: 12,
-                    requirements: "Demonstrar domÃ­nio tÃ©cnico e concluir os requisitos do PDI.",
-                    competencies: [{ name: "ReferÃªncia tÃ©cnica",
-                        description: "Orienta decisÃµes tÃ©cnicas e compartilha conhecimentos avanÃ§ados.",
+                    requirements: "Demonstrar domínio técnico e concluir os requisitos do PDI.",
+                    competencies: [{ name: "Referência técnica",
+                        description: "Orienta decisões técnicas e compartilha conhecimentos avançados.",
                         category: "leadership", requiredLevel: 4 }],
                     trainings: [{ trainingId: created.trainingId, required: true }],
                 },
@@ -265,7 +265,7 @@ try {
             trackId: created.trackId,
             currentLevelId,
             targetLevelId,
-            managerNotes: "Perfil temporÃ¡rio para validaÃ§Ã£o da trilha de carreira.",
+            managerNotes: "Perfil temporário para validação da trilha de carreira.",
         }),
     });
     created.profileId = careerProfile.payload.data.profile.id;
@@ -279,30 +279,30 @@ try {
             managerEmployeeId: employeeId,
             evaluationAssignmentId: created.evaluationAssignmentId,
             targetCareerLevelId: targetLevelId,
-            title: `PDI tÃ©cnico ${suffix}`,
-            description: "Plano temporÃ¡rio criado para validar o desenvolvimento e a carreira.",
-            focusAreas: "Desenvolvimento tÃ©cnico, mentoria e preparaÃ§Ã£o para o prÃ³ximo nÃ­vel.",
+            title: `PDI técnico ${suffix}`,
+            description: "Plano temporário criado para validar o desenvolvimento e a carreira.",
+            focusAreas: "Desenvolvimento técnico, mentoria e preparação para o próximo nível.",
             status: "active",
             startsOn: dateFromToday(0),
             targetEndOn: dateFromToday(15),
             objectives: [{
-                title: "PreparaÃ§Ã£o para especialista",
-                description: "Desenvolver competÃªncias necessÃ¡rias para alcanÃ§ar o prÃ³ximo nÃ­vel.",
-                successCriteria: "Concluir o treinamento e a sessÃ£o de mentoria previstas.",
+                title: "Preparação para especialista",
+                description: "Desenvolver competências necessárias para alcançar o próximo nível.",
+                successCriteria: "Concluir o treinamento e a sessão de mentoria previstas.",
                 weight: 100,
                 targetDate: dateFromToday(10),
                 actions: [
                     {
                         actionType: "training",
-                        title: "Treinamento obrigatÃ³rio",
-                        description: "Concluir o treinamento obrigatÃ³rio do nÃ­vel desejado.",
+                        title: "Treinamento obrigatório",
+                        description: "Concluir o treinamento obrigatório do nível desejado.",
                         dueAt: instantFromNow(120).toISOString(),
                         trainingId: created.trainingId,
                     },
                     {
                         actionType: "mentoring",
                         title: "Mentoria de carreira",
-                        description: "Realizar alinhamento sobre competÃªncias e prÃ³ximos passos.",
+                        description: "Realizar alinhamento sobre competências e próximos passos.",
                         dueAt: mentoringStarts.toISOString(),
                         meetingEndsAt: new Date(mentoringStarts.getTime() + 30 * 60 * 1_000).toISOString(),
                     },
@@ -323,7 +323,7 @@ try {
     assert.equal(mentoringEvent.payload.data.event.eventType, "meeting");
     await request(`/api/v1/development/me/plans/${created.planId}/actions/${mentoringAction.id}`, {
         method: "PATCH",
-        body: JSON.stringify({ progressPercent: 100, employeeNotes: "Mentoria concluÃ­da." }),
+        body: JSON.stringify({ progressPercent: 100, employeeNotes: "Mentoria concluída." }),
     });
     await request(`/api/v1/trainings/me/enrollments/${created.trainingEnrollmentId}/progress`, {
         method: "PATCH",

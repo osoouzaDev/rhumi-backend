@@ -475,8 +475,8 @@ export class EvaluationAssignmentsRepository {
                      SET title = $2, description = $3, starts_at = $4, ends_at = $5,
                          location = $6, meeting_url = $7, status = 'scheduled', updated_by = $8
                      WHERE id = $1`,
-                    [eventId, `Feedback ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â ${assignment.cycleName}`,
-                        `ReuniÃƒÆ’Ã‚Â£o de feedback da avaliaÃƒÆ’Ã‚Â§ÃƒÆ’Ã‚Â£o de ${assignment.employeeName}.`,
+                    [eventId, `Feedback — ${assignment.cycleName}`,
+                        `Reunião de feedback da avaliação de ${assignment.employeeName}.`,
                         input.startsAt, input.endsAt, input.location ?? null,
                         input.meetingUrl ?? null, actor.userId],
                 );
@@ -488,8 +488,8 @@ export class EvaluationAssignmentsRepository {
                         created_by, updated_by
                      ) VALUES ($1, $2, $3, 'evaluation', 'participants', 'scheduled',
                         $4, $5, $6, $7, FALSE, 'America/Cuiaba', $8, $8) RETURNING id`,
-                    [assignment.companyId, `Feedback ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â ${assignment.cycleName}`,
-                        `ReuniÃƒÆ’Ã‚Â£o de feedback da avaliaÃƒÆ’Ã‚Â§ÃƒÆ’Ã‚Â£o de ${assignment.employeeName}.`,
+                    [assignment.companyId, `Feedback — ${assignment.cycleName}`,
+                        `Reunião de feedback da avaliação de ${assignment.employeeName}.`,
                         input.location ?? null, input.meetingUrl ?? null,
                         input.startsAt, input.endsAt, actor.userId],
                 );
@@ -709,9 +709,3 @@ export class EvaluationAssignmentsRepository {
 }
 
 export const evaluationAssignmentsRepository = new EvaluationAssignmentsRepository();
-
-
-
-
-
-

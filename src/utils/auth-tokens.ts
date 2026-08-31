@@ -59,4 +59,3 @@ export const verifyAccessToken = (token: string): AccessTokenClaims => {
         expiresAt: decoded.exp,
     };
 };
-

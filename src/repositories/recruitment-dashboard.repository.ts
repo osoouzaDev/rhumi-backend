@@ -96,5 +96,3 @@ export class RecruitmentDashboardRepository {
 }
 
 export const recruitmentDashboardRepository = new RecruitmentDashboardRepository();
-
-

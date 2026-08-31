@@ -70,7 +70,7 @@ export const evaluationCycleListQuerySchema = z.object({
 export const createEvaluationCycleSchema = z.object({
     departmentId: uuidSchema.nullable().optional(),
     code: z.string().trim().min(2).max(60)
-        .regex(/^[A-Za-z0-9][A-Za-z0-9._-]*$/, "CÃ³digo invÃ¡lido."),
+        .regex(/^[A-Za-z0-9][A-Za-z0-9._-]*$/, "Código inválido."),
     name: z.string().trim().min(3).max(180),
     description: z.string().trim().min(20).max(20_000),
     status: z.enum(["draft", "scheduled", "active"]).default("draft"),
@@ -79,17 +79,17 @@ export const createEvaluationCycleSchema = z.object({
     managerWeight: z.number().min(0).max(100).default(70),
     competencies: z.array(competencySchema).min(1).max(100),
 }).strict()
-    .refine(validCycleDates, { message: "As datas do ciclo estÃ£o fora de ordem.",
+    .refine(validCycleDates, { message: "As datas do ciclo estão fora de ordem.",
         path: ["startsOn"] })
-    .refine(validWeights, { message: "Os pesos da autoavaliaÃ§Ã£o e do gestor devem somar 100.",
+    .refine(validWeights, { message: "Os pesos da autoavaliação e do gestor devem somar 100.",
         path: ["selfWeight"] })
-    .refine(validCompetencyWeights, { message: "Os pesos das competÃªncias devem somar 100.",
+    .refine(validCompetencyWeights, { message: "Os pesos das competências devem somar 100.",
         path: ["competencies"] });
 
 export const updateEvaluationCycleSchema = z.object({
     departmentId: uuidSchema.nullable().optional(),
     code: z.string().trim().min(2).max(60)
-        .regex(/^[A-Za-z0-9][A-Za-z0-9._-]*$/, "CÃ³digo invÃ¡lido.").optional(),
+        .regex(/^[A-Za-z0-9][A-Za-z0-9._-]*$/, "Código inválido.").optional(),
     name: z.string().trim().min(3).max(180).optional(),
     description: z.string().trim().min(20).max(20_000).optional(),
     status: evaluationCycleStatusSchema.optional(),
@@ -101,10 +101,10 @@ export const updateEvaluationCycleSchema = z.object({
     managerWeight: z.number().min(0).max(100).optional(),
     competencies: z.array(competencySchema).min(1).max(100).optional(),
 }).strict()
-    .refine(hasAtLeastOneDefinedValue, { message: "Informe ao menos um campo para atualizaÃ§Ã£o." })
-    .refine(validCycleDates, { message: "As datas do ciclo estÃ£o fora de ordem." })
+    .refine(hasAtLeastOneDefinedValue, { message: "Informe ao menos um campo para atualização." })
+    .refine(validCycleDates, { message: "As datas do ciclo estão fora de ordem." })
     .refine(validWeights, { message: "Os pesos informados devem somar 100." })
-    .refine(validCompetencyWeights, { message: "Os pesos das competÃªncias devem somar 100." });
+    .refine(validCompetencyWeights, { message: "Os pesos das competências devem somar 100." });
 
 const participantSchema = z.object({
     employeeId: uuidSchema,
@@ -114,7 +114,7 @@ const participantSchema = z.object({
 export const assignEvaluationParticipantsSchema = z.object({
     participants: z.array(participantSchema).min(1).max(500)
         .refine((items) => new Set(items.map((item) => item.employeeId)).size === items.length,
-            "O mesmo colaborador nÃ£o pode ser informado mais de uma vez."),
+            "O mesmo colaborador não pode ser informado mais de uma vez."),
 }).strict();
 
 export const evaluationAssignmentListQuerySchema = z.object({
@@ -139,14 +139,14 @@ const uniqueResponses = (
 
 export const submitSelfReviewSchema = z.object({
     responses: z.array(reviewResponseSchema).min(1).max(100).refine(
-        uniqueResponses, "Uma competÃªncia nÃ£o pode ser respondida mais de uma vez.",
+        uniqueResponses, "Uma competência não pode ser respondida mais de uma vez.",
     ),
     employeeSummary: nullableText(20_000).optional(),
 }).strict();
 
 export const submitManagerReviewSchema = z.object({
     responses: z.array(reviewResponseSchema).min(1).max(100).refine(
-        uniqueResponses, "Uma competÃªncia nÃ£o pode ser respondida mais de uma vez.",
+        uniqueResponses, "Uma competência não pode ser respondida mais de uma vez.",
     ),
     strengths: z.string().trim().min(10).max(20_000),
     improvementPoints: z.string().trim().min(10).max(20_000),
@@ -159,7 +159,7 @@ export const scheduleEvaluationFeedbackSchema = z.object({
     location: z.string().trim().max(255).nullable().optional(),
     meetingUrl: nullableUrl.optional(),
 }).strict().refine((input) => new Date(input.endsAt).getTime() > new Date(input.startsAt).getTime(), {
-    message: "O tÃ©rmino do feedback deve ser posterior ao inÃ­cio.", path: ["endsAt"],
+    message: "O término do feedback deve ser posterior ao início.", path: ["endsAt"],
 });
 
 export const completeEvaluationFeedbackSchema = z.object({
@@ -186,7 +186,7 @@ export const updatePerformanceGoalSchema = z.object({
     employeeNotes: nullableText(10_000).optional(),
     managerNotes: nullableText(10_000).optional(),
 }).strict().refine(hasAtLeastOneDefinedValue, {
-    message: "Informe ao menos um campo para atualizaÃ§Ã£o.",
+    message: "Informe ao menos um campo para atualização.",
 });
 
 export const updateMyPerformanceGoalSchema = z.object({
@@ -212,5 +212,3 @@ export type CreatePerformanceGoalInput = z.infer<typeof createPerformanceGoalSch
 export type UpdatePerformanceGoalInput = z.infer<typeof updatePerformanceGoalSchema>;
 export type UpdateMyPerformanceGoalInput = z.infer<typeof updateMyPerformanceGoalSchema>;
 export type MyEvaluationListQuery = z.infer<typeof myEvaluationListQuerySchema>;
-
-

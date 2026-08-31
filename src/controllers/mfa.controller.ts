@@ -68,4 +68,3 @@ export const disableMfa = async (
     await mfaService.disable(requireAuthentication(request), input);
     response.status(204).send();
 };
-

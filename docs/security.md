@@ -123,4 +123,3 @@ A integração de segurança valida o RLS diretamente, incluindo leitura sem con
 - Centralizar logs e auditoria em armazenamento externo com retenção, alertas e acesso restrito.
 - Executar SAST/DAST no pipeline e teste de invasão independente antes de usar dados reais.
 - Configurar backup, restauração testada, rotação de segredos e resposta a incidentes na infraestrutura.
-

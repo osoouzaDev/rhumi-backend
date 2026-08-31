@@ -55,4 +55,3 @@ test("gera códigos de recuperação fortes e hashes determinísticos", () => {
         mfa.hashRecoveryCode(codes[0].replaceAll("-", "").toLowerCase()),
     );
 });
-

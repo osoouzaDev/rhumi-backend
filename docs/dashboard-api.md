@@ -53,4 +53,3 @@ A consulta ao dashboard também sincroniza a central do usuário sem criar dupli
 ## Escopo
 
 `scope.type` é `company` para administrador e `department` para os demais perfis. `generatedAt` informa o instante de geração dos indicadores.
-
