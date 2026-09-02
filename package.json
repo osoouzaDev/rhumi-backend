@@ -5,7 +5,7 @@
   "type": "module",
   "main": "dist/server.js",
   "scripts": {
-    "test": "npm run build && node --test test/auth-tokens.test.mjs test/app.test.mjs test/domain-schemas.test.mjs test/protected-routes.test.mjs test/users-schemas.test.mjs test/users-routes.test.mjs test/dashboard.test.mjs test/recruitment.test.mjs test/calendar.test.mjs test/trainings.test.mjs test/journeys.test.mjs test/evaluations.test.mjs test/development.test.mjs test/notifications.test.mjs test/security.test.mjs test/mfa.test.mjs test/redis-config.test.mjs test/encoding.test.mjs test/migration-integrity.test.mjs test/deployment-config.test.mjs test/private-files-backup.test.mjs",
+    "test": "npm run build && node --import ./test/setup-env.mjs --test test/auth-tokens.test.mjs test/app.test.mjs test/domain-schemas.test.mjs test/protected-routes.test.mjs test/users-schemas.test.mjs test/users-routes.test.mjs test/dashboard.test.mjs test/recruitment.test.mjs test/calendar.test.mjs test/trainings.test.mjs test/journeys.test.mjs test/evaluations.test.mjs test/development.test.mjs test/notifications.test.mjs test/security.test.mjs test/mfa.test.mjs test/redis-config.test.mjs test/encoding.test.mjs test/migration-integrity.test.mjs test/deployment-config.test.mjs test/private-files-backup.test.mjs",
     "test:integration:recruitment": "npm run build && node test/recruitment.integration.mjs",
     "test:integration:calendar": "npm run build && node test/calendar.integration.mjs",
     "test:integration:trainings": "npm run build && node test/trainings.integration.mjs",
