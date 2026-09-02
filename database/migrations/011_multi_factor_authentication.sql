@@ -57,3 +57,4 @@ ALTER TABLE mfa_login_challenges ENABLE ROW LEVEL SECURITY;
 CREATE POLICY tenant_isolation ON mfa_login_challenges
     USING (company_id = rhumi_current_company_id())
     WITH CHECK (company_id = rhumi_current_company_id());
+

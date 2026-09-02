@@ -423,3 +423,4 @@ CREATE POLICY tenant_isolation ON training_exam_questions
               AND training_exams.company_id = rhumi_current_company_id()
         )
     );
+

@@ -8,6 +8,12 @@ const rootFiles = [".env.example", "package.json", "README.md"];
 const textExtensions = new Set([".example", ".json", ".md", ".mjs", ".sql", ".ts"]);
 const corruptedEncodingPattern = /\u00c3(?:[\u0080-\u00bf]|\u0192)|\u00c2[\u0080-\u00bf]|\u00e2(?:\u20ac|\u201a)|\u00c6\u2019|[\u0080-\u009f]/u;
 
+// Esta migration precisa manter os bytes exatos já registrados em produção.
+// A descrição legada é corrigida por uma nova migration, sem alterar o histórico.
+const immutableLegacyEncodingFiles = new Set([
+    join("database", "migrations", "009_notifications_and_pending_center.sql"),
+]);
+
 const listTextFiles = async (directory) => {
     const entries = await readdir(directory, { withFileTypes: true });
     const files = [];
@@ -30,7 +36,7 @@ test("detecta caracteres corrompidos nos arquivos de texto", async () => {
 
     for (const path of [...rootFiles, ...nestedFiles]) {
         const content = await readFile(path, "utf8");
-        if (corruptedEncodingPattern.test(content)) {
+        if (corruptedEncodingPattern.test(content) && !immutableLegacyEncodingFiles.has(path)) {
             corruptedFiles.push(path);
         }
     }
