@@ -28,6 +28,14 @@ export class AuthTenantRepository {
         );
         return result.rows[0]?.company_id ?? null;
     }
+
+    async resolveAccountTokenCompany(tokenHash: string): Promise<string | null> {
+        const result = await database.query<CompanyResolutionRow>(
+            "SELECT rhumi_resolve_account_token_company($1) AS company_id",
+            [tokenHash],
+        );
+        return result.rows[0]?.company_id ?? null;
+    }
 }
 
 export const authTenantRepository = new AuthTenantRepository();

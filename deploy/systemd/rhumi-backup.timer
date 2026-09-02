@@ -1,0 +1,11 @@
+[Unit]
+Description=Backup diário do banco RHumi
+
+[Timer]
+OnCalendar=*-*-* 02:15:00
+Persistent=true
+RandomizedDelaySec=900
+Unit=rhumi-backup.service
+
+[Install]
+WantedBy=timers.target

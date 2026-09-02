@@ -29,6 +29,12 @@ const parseAccessToken = (token: string): AccessTokenClaims => {
     }
 };
 
+const allowsMfaEnrollment = (request: Request): boolean => (
+    (request.method === "GET" && ["/mfa", "/me"].includes(request.path))
+    || (request.method === "POST"
+        && ["/mfa/setup", "/mfa/confirm", "/logout"].includes(request.path))
+);
+
 export const authenticate = async (
     request: Request,
     _response: Response,
@@ -52,6 +58,19 @@ export const authenticate = async (
                     401,
                     "INVALID_SESSION",
                     "A sessão não é válida ou expirou.",
+                );
+            }
+
+            if (
+                env.MFA_REQUIRE_ADMINISTRATORS
+                && context.roles.some((role) => role.toLowerCase() === "administrator")
+                && !context.mfaEnabled
+                && !allowsMfaEnrollment(request)
+            ) {
+                throw new AppError(
+                    403,
+                    "MFA_ENROLLMENT_REQUIRED",
+                    "Configure a autentica��o de dois fatores para continuar.",
                 );
             }
 

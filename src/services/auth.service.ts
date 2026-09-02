@@ -21,6 +21,7 @@ export interface AuthenticationResult {
     accessToken: string;
     refreshToken: string;
     expiresIn: number;
+    mfaEnrollmentRequired: boolean;
     user: {
         id: string;
         employeeId: string;
@@ -28,6 +29,7 @@ export interface AuthenticationResult {
         employeeCode: string;
         fullName: string;
         email: string;
+        emailVerified: boolean;
     };
 }
 
@@ -49,6 +51,7 @@ const publicUser = (user: AuthenticationUser): AuthenticationResult["user"] => (
     employeeCode: user.employeeCode,
     fullName: user.fullName,
     email: user.email,
+    emailVerified: Boolean(user.emailVerifiedAt),
 });
 
 export class AuthService {
@@ -83,7 +86,8 @@ export class AuthService {
 
         return runWithTenantContext(user.companyId, async () => {
             await authRepository.recordSuccessfulLogin(user.id);
-            if (await mfaService.isEnabledForUser(user.id)) {
+            const mfaEnabled = await mfaService.isEnabledForUser(user.id);
+            if (mfaEnabled) {
                 return mfaService.createLoginChallenge(user, metadata);
             }
 
@@ -100,6 +104,8 @@ export class AuthService {
                 accessToken: createAccessToken(user.id, sessionId, user.companyId),
                 refreshToken,
                 expiresIn: env.ACCESS_TOKEN_EXPIRES_IN_SECONDS,
+                mfaEnrollmentRequired: env.MFA_REQUIRE_ADMINISTRATORS
+                    && user.isAdministrator,
                 user: publicUser(user),
             };
         });
@@ -143,6 +149,9 @@ export class AuthService {
                 ),
                 refreshToken: newRefreshToken,
                 expiresIn: env.ACCESS_TOKEN_EXPIRES_IN_SECONDS,
+                mfaEnrollmentRequired: env.MFA_REQUIRE_ADMINISTRATORS
+                    && rotatedSession.user.isAdministrator
+                    && !(await mfaService.isEnabledForUser(rotatedSession.user.id)),
                 user: publicUser(rotatedSession.user),
             };
         });
@@ -168,6 +177,8 @@ export class AuthService {
         return user.status === "active"
             && user.employeeStatus === "active"
             && user.companyActive
+            && Boolean(user.activatedAt)
+            && Boolean(user.emailVerifiedAt)
             && (!user.lockedUntil || user.lockedUntil <= new Date());
     }
 

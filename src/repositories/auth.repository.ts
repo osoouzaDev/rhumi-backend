@@ -16,6 +16,9 @@ export interface AuthenticationUser {
     companyActive: boolean;
     failedLoginAttempts: number;
     lockedUntil: Date | null;
+    activatedAt: Date | null;
+    emailVerifiedAt: Date | null;
+    isAdministrator: boolean;
 }
 
 export interface AuthenticationContext {
@@ -30,6 +33,7 @@ export interface AuthenticationContext {
     email: string;
     roles: string[];
     permissions: string[];
+    mfaEnabled: boolean;
 }
 
 export interface SessionMetadata {
@@ -52,6 +56,9 @@ interface AuthenticationUserRow {
     company_active: boolean;
     failed_login_attempts: number;
     locked_until: Date | null;
+    activated_at: Date | null;
+    email_verified_at: Date | null;
+    is_administrator: boolean;
 }
 
 interface AuthenticationContextRow {
@@ -66,6 +73,7 @@ interface AuthenticationContextRow {
     email: string;
     roles: string[];
     permissions: string[];
+    mfa_enabled: boolean;
 }
 
 interface SessionRow extends AuthenticationUserRow {
@@ -91,6 +99,9 @@ const mapAuthenticationUser = (row: AuthenticationUserRow): AuthenticationUser =
     companyActive: row.company_active,
     failedLoginAttempts: row.failed_login_attempts,
     lockedUntil: row.locked_until,
+    activatedAt: row.activated_at,
+    emailVerifiedAt: row.email_verified_at,
+    isAdministrator: row.is_administrator,
 });
 
 const authenticationUserSelect = `
@@ -100,6 +111,14 @@ const authenticationUserSelect = `
         users.status,
         users.failed_login_attempts,
         users.locked_until,
+        users.activated_at,
+        users.email_verified_at,
+        EXISTS (
+            SELECT 1 FROM user_roles
+            INNER JOIN roles ON roles.id = user_roles.role_id
+            WHERE user_roles.user_id = users.id
+              AND LOWER(roles.code) = 'administrator'
+        ) AS is_administrator,
         employees.id AS employee_id,
         employees.company_id,
         employees.department_id,
@@ -326,7 +345,12 @@ export class AuthRepository {
                           AND user_permission_overrides.effect = 'deny'
                     ) AS effective_permissions
                     ORDER BY effective_permissions.permission_code
-                ) AS permissions
+                ) AS permissions,
+                COALESCE((
+                    SELECT user_mfa_settings.enabled
+                    FROM user_mfa_settings
+                    WHERE user_mfa_settings.user_id = users.id
+                ), FALSE) AS mfa_enabled
              FROM sessions
              INNER JOIN users ON users.id = sessions.user_id
              INNER JOIN employees ON employees.id = users.employee_id
@@ -362,6 +386,7 @@ export class AuthRepository {
             email: row.email,
             roles: row.roles,
             permissions: row.permissions,
+            mfaEnabled: row.mfa_enabled,
         };
     }
 
@@ -462,6 +487,14 @@ export class AuthRepository {
                 users.status,
                 users.failed_login_attempts,
                 users.locked_until,
+                users.activated_at,
+                users.email_verified_at,
+                EXISTS (
+                    SELECT 1 FROM user_roles
+                    INNER JOIN roles ON roles.id = user_roles.role_id
+                    WHERE user_roles.user_id = users.id
+                      AND LOWER(roles.code) = 'administrator'
+                ) AS is_administrator,
                 employees.id AS employee_id,
                 employees.company_id,
                 employees.department_id,

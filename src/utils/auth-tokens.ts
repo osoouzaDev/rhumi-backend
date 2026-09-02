@@ -12,7 +12,13 @@ export interface AccessTokenClaims {
 
 export const createRefreshToken = (): string => randomBytes(48).toString("base64url");
 
+export const createOpaqueToken = (): string => randomBytes(48).toString("base64url");
+
 export const hashRefreshToken = (token: string): string => createHash("sha256")
+    .update(token)
+    .digest("hex");
+
+export const hashOpaqueToken = (token: string): string => createHash("sha256")
     .update(token)
     .digest("hex");
 
@@ -34,11 +40,18 @@ export const createAccessToken = (
 );
 
 export const verifyAccessToken = (token: string): AccessTokenClaims => {
-    const decoded = jwt.verify(token, env.JWT_SECRET, {
+    const verificationOptions: jwt.VerifyOptions = {
         algorithms: ["HS256"],
         issuer: env.JWT_ISSUER,
         audience: env.JWT_AUDIENCE,
-    });
+    };
+    let decoded: jwt.JwtPayload | string;
+    try {
+        decoded = jwt.verify(token, env.JWT_SECRET, verificationOptions);
+    } catch (currentError) {
+        if (!env.JWT_PREVIOUS_SECRET) throw currentError;
+        decoded = jwt.verify(token, env.JWT_PREVIOUS_SECRET, verificationOptions);
+    }
 
     if (
         typeof decoded === "string"

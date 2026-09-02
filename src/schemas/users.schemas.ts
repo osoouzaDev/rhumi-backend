@@ -47,14 +47,12 @@ export const userListQuerySchema = z.object({
 
 export const createUserSchema = z.object({
     employeeId: uuidSchema,
-    password: z.string().min(12).max(128),
     roleCodes: roleCodesSchema,
     permissionOverrides: permissionOverridesSchema.default([]),
 }).strict();
 
 export const updateUserSchema = z.object({
     status: userStatusSchema.optional(),
-    password: z.string().min(12).max(128).optional(),
     roleCodes: roleCodesSchema.optional(),
     permissionOverrides: permissionOverridesSchema.optional(),
 }).strict().refine(hasAtLeastOneDefinedValue, {

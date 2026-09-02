@@ -13,7 +13,6 @@ interface PermissionStatusRow {
     can_bypass_rls: boolean;
     can_modify_audit_logs: boolean;
     can_write_schema_migrations: boolean;
-    can_read_legacy_users: boolean;
     can_execute_tenant_resolvers: boolean;
     rls_enabled_tables: number;
 }
@@ -42,8 +41,6 @@ const showPermissionStatus = async (): Promise<void> => {
                 OR has_table_privilege(CURRENT_USER, 'public.schema_migrations', 'UPDATE')
                 OR has_table_privilege(CURRENT_USER, 'public.schema_migrations', 'DELETE')
             ) AS can_write_schema_migrations,
-            has_table_privilege(CURRENT_USER, 'public.usuarios', 'SELECT')
-                AS can_read_legacy_users,
             (
                 has_function_privilege(
                     CURRENT_USER,
@@ -94,9 +91,6 @@ const showPermissionStatus = async (): Promise<void> => {
     console.log(
         `Pode adulterar histórico de migrations: `
         + yesOrNo(status.can_write_schema_migrations),
-    );
-    console.log(
-        `Pode ler a tabela legada usuarios: ${yesOrNo(status.can_read_legacy_users)}`,
     );
     console.log(
         `Pode executar resolvedores seguros de empresa: `

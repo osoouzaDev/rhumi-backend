@@ -10,11 +10,13 @@ import {
     markNotificationUnread,
     updateNotificationPreferences,
 } from "../controllers/notifications.controller.js";
+import { streamNotifications } from "../controllers/notification-stream.controller.js";
 import { authenticate, authorize } from "../middlewares/auth.middleware.js";
 
 const notificationsRoutes = Router();
 notificationsRoutes.use(authenticate);
 
+notificationsRoutes.get("/stream", authorize("notifications.read"), streamNotifications);
 notificationsRoutes.get("/", authorize("notifications.read"), listNotifications);
 notificationsRoutes.get("/summary", authorize("notifications.read"), getNotificationSummary);
 notificationsRoutes.post(

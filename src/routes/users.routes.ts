@@ -3,6 +3,7 @@ import {
     archiveUser,
     createUser,
     getUser,
+    inviteUser,
     listPermissions,
     listRoles,
     listUsers,
@@ -18,6 +19,7 @@ usersRoutes.get("/permissions", authorize("users.list"), listPermissions);
 usersRoutes.get("/", authorize("users.list"), listUsers);
 usersRoutes.get("/:id", authorize("users.list"), getUser);
 usersRoutes.post("/", authorize("users.create"), createUser);
+usersRoutes.post("/:id/invitations", authorize("users.update"), inviteUser);
 usersRoutes.patch("/:id", authorize("users.update"), updateUser);
 usersRoutes.delete("/:id", authorize("users.delete"), archiveUser);
 

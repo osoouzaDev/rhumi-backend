@@ -9,6 +9,7 @@ import {
     type QueryResultRow,
 } from "pg";
 import { env } from "../config/env.js";
+import { logger } from "../utils/logger.js";
 import { getTenantCompanyId } from "./tenant-context.js";
 
 const certificateAuthority = env.DB_SSL_CA_PATH
@@ -50,7 +51,7 @@ pool.on("error", (error) => {
         message: error.message,
         code: "code" in error ? error.code : undefined,
     };
-    console.error("Erro inesperado no pool do PostgreSQL:", safeError);
+    logger.error("database.pool_error", { error: safeError });
 });
 
 const setTenantContext = async (

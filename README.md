@@ -70,6 +70,8 @@ Consulte [Segurança e operação](docs/security.md) antes de preparar o ambient
 ## Documentação dos módulos
 
 - [Segurança e operação](docs/security.md)
+- [Preparação da homologação](docs/staging.md)
+- [Operação em produção](docs/operations.md)
 - [Dashboard](docs/dashboard-api.md)
 - [Recrutamento](docs/recruitment-api.md)
 - [Calendário](docs/calendar-api.md)
@@ -84,6 +86,7 @@ Consulte [Segurança e operação](docs/security.md) antes de preparar o ambient
 
 - `npm run dev`: desenvolvimento com recarregamento automático
 - `npm run build`: compila o TypeScript
+- `npm run config:validate -- /caminho/ambiente.env`: valida um arquivo de ambiente sem exibir segredos
 - `npm test`: compila e executa os testes automatizados
 - `npm run test:integration:security`: valida sessões, RBAC, empresas e privilégios PostgreSQL
 - `npm run test:integration:mfa`: valida TOTP, recuperação e proteção contra replay

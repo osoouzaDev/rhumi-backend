@@ -1,6 +1,7 @@
 import { RedisStore } from "rate-limit-redis";
 import { createClient, type RedisClientType } from "redis";
 import { env } from "./env.js";
+import { logger } from "../utils/logger.js";
 
 const redisClient: RedisClientType | undefined = env.RATE_LIMIT_STORE === "redis"
     ? createClient({
@@ -15,7 +16,7 @@ const redisClient: RedisClientType | undefined = env.RATE_LIMIT_STORE === "redis
     : undefined;
 
 redisClient?.on("error", (error) => {
-    console.error("Falha na conexão Redis:", {
+    logger.error("redis.connection_error", {
         name: error.name,
         message: error.message,
     });

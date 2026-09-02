@@ -1,0 +1,28 @@
+services:
+  api:
+    image: ${RHUMI_IMAGE:?Defina RHUMI_IMAGE com um digest imutÃƒÂ¡vel}
+    restart: unless-stopped
+    env_file:
+      - ${RHUMI_CONFIG_ROOT:-/etc/rhumi}/${RHUMI_ENVIRONMENT:?Defina RHUMI_ENVIRONMENT}.env
+    ports:
+      - "127.0.0.1:${RHUMI_PORT:-8000}:8000"
+    volumes:
+      - ${RHUMI_FILE_STORAGE_PATH:-/var/lib/rhumi/files}:/app/var/private-files
+      - ${RHUMI_CONFIG_ROOT:-/etc/rhumi}/certs/postgresql-ca.pem:/run/secrets/postgresql-ca.pem:ro
+    read_only: true
+    tmpfs:
+      - /tmp:size=64m,noexec,nosuid,nodev
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+    healthcheck:
+      test:
+        - CMD
+        - node
+        - -e
+        - fetch('http://127.0.0.1:8000/ready').then(r=>{if(!r.ok)process.exit(1)}).catch(()=>process.exit(1))
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 20s

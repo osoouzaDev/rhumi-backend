@@ -3,7 +3,7 @@ import { readdir, readFile } from "node:fs/promises";
 import { extname, join } from "node:path";
 import test from "node:test";
 
-const sourceDirectories = ["database", "docs", "src", "test"];
+const sourceDirectories = [".github", "database", "deploy", "docs", "ops", "scripts", "src", "test"];
 const rootFiles = [".env.example", "package.json", "README.md"];
 const textExtensions = new Set([".example", ".json", ".md", ".mjs", ".sql", ".ts"]);
 const corruptedEncodingPattern = /\u00c3(?:[\u0080-\u00bf]|\u0192)|\u00c2[\u0080-\u00bf]|\u00e2(?:\u20ac|\u201a)|\u00c6\u2019|[\u0080-\u009f]/u;

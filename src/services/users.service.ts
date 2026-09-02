@@ -15,6 +15,8 @@ import type {
     UpdateUserInput,
     UserListQuery,
 } from "../schemas/users.schemas.js";
+import { createOpaqueToken } from "../utils/auth-tokens.js";
+import { accountService } from "./account.service.js";
 
 const userNotFound = (): AppError => new AppError(
     404,
@@ -55,7 +57,10 @@ export class UsersService {
         context: AuthenticationContext,
         input: CreateUserInput,
         actor: AuditActor,
-    ): Promise<UserAccount> {
+    ): Promise<{
+        user: UserAccount;
+        invitation: Awaited<ReturnType<typeof accountService.issueInvitation>>;
+    }> {
         const employee = await usersRepository.findEmployeeCandidate(
             context.companyId,
             input.employeeId,
@@ -87,9 +92,9 @@ export class UsersService {
             input.roleCodes,
             input.permissionOverrides,
         );
-        const passwordHash = await argon2.hash(input.password, { type: argon2.argon2id });
+        const passwordHash = await argon2.hash(createOpaqueToken(), { type: argon2.argon2id });
 
-        return usersRepository.createOrRestore(
+        const user = await usersRepository.createOrRestore(
             context.companyId,
             {
                 employeeId: input.employeeId,
@@ -99,7 +104,10 @@ export class UsersService {
             },
             actor,
         );
+        const invitation = await accountService.issueInvitation(context, user.id, actor);
+        return { user, invitation };
     }
+
 
     async update(
         context: AuthenticationContext,
@@ -118,16 +126,12 @@ export class UsersService {
                 input.permissionOverrides ?? current.permissionOverrides,
             )
             : undefined;
-        const passwordHash = input.password
-            ? await argon2.hash(input.password, { type: argon2.argon2id })
-            : undefined;
 
         const account = await usersRepository.update(
             context.companyId,
             userId,
             {
                 status: input.status,
-                passwordHash,
                 roleIds: input.roleCodes ? access?.roleIds : undefined,
                 permissionOverrides: input.permissionOverrides
                     ? access?.permissionOverrides

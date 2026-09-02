@@ -5,7 +5,7 @@
   "type": "module",
   "main": "dist/server.js",
   "scripts": {
-    "test": "npm run build && node --test test/auth-tokens.test.mjs test/app.test.mjs test/domain-schemas.test.mjs test/protected-routes.test.mjs test/users-schemas.test.mjs test/users-routes.test.mjs test/dashboard.test.mjs test/recruitment.test.mjs test/calendar.test.mjs test/trainings.test.mjs test/journeys.test.mjs test/evaluations.test.mjs test/development.test.mjs test/notifications.test.mjs test/security.test.mjs test/mfa.test.mjs test/redis-config.test.mjs test/encoding.test.mjs",
+    "test": "npm run build && node --test test/auth-tokens.test.mjs test/app.test.mjs test/domain-schemas.test.mjs test/protected-routes.test.mjs test/users-schemas.test.mjs test/users-routes.test.mjs test/dashboard.test.mjs test/recruitment.test.mjs test/calendar.test.mjs test/trainings.test.mjs test/journeys.test.mjs test/evaluations.test.mjs test/development.test.mjs test/notifications.test.mjs test/security.test.mjs test/mfa.test.mjs test/redis-config.test.mjs test/encoding.test.mjs test/deployment-config.test.mjs test/private-files-backup.test.mjs",
     "test:integration:recruitment": "npm run build && node test/recruitment.integration.mjs",
     "test:integration:calendar": "npm run build && node test/calendar.integration.mjs",
     "test:integration:trainings": "npm run build && node test/trainings.integration.mjs",
@@ -14,7 +14,12 @@
     "test:integration:development": "npm run build && node test/development.integration.mjs",
     "dev": "tsx watch src/server.ts",
     "build": "tsc",
+    "config:validate": "npm run build && node scripts/validate-deployment-env.mjs",
     "start": "node dist/server.js",
+    "backup:database": "node scripts/backup.mjs",
+    "backup:database:verify": "node scripts/verify-latest-backup.mjs",
+    "backup:files": "node scripts/backup-private-files.mjs",
+    "backup:files:verify": "node scripts/verify-latest-file-backup.mjs",
     "db:status": "npm run build && node dist/database/status.js",
     "db:permissions": "npm run build && node dist/database/permissions-status.js",
     "db:migrate": "npm run build && node dist/database/migrate.js",
@@ -25,7 +30,9 @@
     "db:provision-app-role": "npm run build && node dist/database/provision-app-role.js",
     "db:provision-app-role:prod": "node dist/database/provision-app-role.js",
     "test:integration:security": "npm run build && node test/security.integration.mjs",
-    "test:integration:mfa": "npm run build && node test/mfa.integration.mjs"
+    "test:integration:mfa": "npm run build && node test/mfa.integration.mjs",
+    "test:integration:account-files-privacy": "npm run build && node test/account-files-privacy.integration.mjs",
+    "test:integration": "npm run build && node test/security.integration.mjs && node test/mfa.integration.mjs && node test/recruitment.integration.mjs && node test/calendar.integration.mjs && node test/trainings.integration.mjs && node test/journeys.integration.mjs && node test/evaluations.integration.mjs && node test/development.integration.mjs && node test/notifications.integration.mjs && node test/account-files-privacy.integration.mjs"
   },
   "repository": {
     "type": "git",
@@ -51,17 +58,22 @@
     "express-rate-limit": "^8.6.2",
     "helmet": "^8.3.0",
     "jsonwebtoken": "^9.0.3",
+    "multer": "2.3.0",
+    "nodemailer": "9.0.6",
     "otpauth": "^9.5.1",
     "pg": "^8.22.0",
     "rate-limit-redis": "^6.0.1",
     "redis": "^6.2.1",
+    "swagger-ui-express": "5.0.1",
     "zod": "^4.4.3"
   },
   "devDependencies": {
     "@types/cors": "^2.8.19",
     "@types/express": "^5.0.6",
     "@types/jsonwebtoken": "^9.0.10",
+    "@types/multer": "2.2.0",
     "@types/node": "^26.1.2",
+    "@types/nodemailer": "6.4.24",
     "@types/pg": "^8.20.4",
     "tsx": "^4.23.10",
     "typescript": "^7.0.2"

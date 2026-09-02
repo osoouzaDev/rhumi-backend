@@ -1,0 +1,26 @@
+name: Staging DAST
+
+on:
+  schedule:
+    - cron: "43 3 * * 3"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  zap:
+    name: OWASP ZAP active scan
+    if: ${{ vars.STAGING_BASE_URL != '' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v6
+      - name: Scan authorized staging environment
+        uses: zaproxy/action-full-scan@v0.13.0
+        with:
+          target: ${{ vars.STAGING_BASE_URL }}
+          rules_file_name: ops/zap-rules.tsv
+          allow_issue_writing: false
+          fail_action: true
+          cmd_options: -a -j

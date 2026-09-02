@@ -123,15 +123,6 @@ const provisionApplicationRole = async (): Promise<void> => {
         );
         await client.query(`GRANT SELECT, INSERT ON audit_logs TO ${quotedRole}`);
 
-        const legacyTable = await client.query<{ exists: boolean }>(
-            "SELECT TO_REGCLASS('public.usuarios') IS NOT NULL AS exists",
-        );
-        if (legacyTable.rows[0].exists) {
-            await client.query(
-                `REVOKE ALL PRIVILEGES ON TABLE usuarios FROM ${quotedRole}`,
-            );
-        }
-
         await client.query("COMMIT");
         console.log("Usuário restrito da aplicação configurado com sucesso.");
     } catch (error) {

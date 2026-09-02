@@ -42,6 +42,7 @@ export interface MfaAuthenticationResult {
     accessToken: string;
     refreshToken: string;
     expiresIn: number;
+    mfaEnrollmentRequired: boolean;
     user: {
         id: string;
         employeeId: string;
@@ -49,6 +50,7 @@ export interface MfaAuthenticationResult {
         employeeCode: string;
         fullName: string;
         email: string;
+        emailVerified: boolean;
     };
 }
 
@@ -143,6 +145,7 @@ export class MfaService {
                 ),
                 refreshToken,
                 expiresIn: env.ACCESS_TOKEN_EXPIRES_IN_SECONDS,
+                mfaEnrollmentRequired: false,
                 user: {
                     id: challenge.userId,
                     employeeId: challenge.employeeId,
@@ -150,6 +153,7 @@ export class MfaService {
                     employeeCode: challenge.employeeCode,
                     fullName: challenge.fullName,
                     email: challenge.email,
+                    emailVerified: true,
                 },
             };
         });

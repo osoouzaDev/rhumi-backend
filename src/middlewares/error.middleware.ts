@@ -1,7 +1,9 @@
 import type { ErrorRequestHandler, RequestHandler } from "express";
+import multer from "multer";
 import { ZodError } from "zod";
 import { env } from "../config/env.js";
 import { AppError } from "../errors/app-error.js";
+import { logger } from "../utils/logger.js";
 
 export const notFoundHandler: RequestHandler = (request, response) => {
     response.status(404).json({
@@ -44,6 +46,19 @@ export const errorHandler: ErrorRequestHandler = (
         return;
     }
 
+    if (error instanceof multer.MulterError) {
+        response.status(422).json({
+            error: {
+                code: error.code === "LIMIT_FILE_SIZE" ? "FILE_TOO_LARGE" : "UPLOAD_ERROR",
+                message: error.code === "LIMIT_FILE_SIZE"
+                    ? `O arquivo excede o limite de ${env.FILE_MAX_BYTES} bytes.`
+                    : "O envio do arquivo é inválido.",
+                requestId: request.requestId,
+            },
+        });
+        return;
+    }
+
     if (error instanceof AppError) {
         response.status(error.statusCode).json({
             error: {
@@ -56,7 +71,7 @@ export const errorHandler: ErrorRequestHandler = (
         return;
     }
 
-    console.error("Erro não tratado na API:", {
+    logger.error("http.unhandled_error", {
         requestId: request.requestId,
         method: request.method,
         path: request.path,

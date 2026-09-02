@@ -1,0 +1,77 @@
+name: Controlled Deployment
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: Protected GitHub environment and host configuration
+        required: true
+        type: choice
+        options: [staging, production]
+      image:
+        description: Immutable GHCR image reference including @sha256 digest
+        required: true
+        type: string
+      run_migrations:
+        description: Apply forward database migrations before starting the API
+        required: true
+        default: true
+        type: boolean
+
+permissions:
+  contents: read
+  packages: read
+
+concurrency:
+  group: deploy-${{ inputs.environment }}
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    environment: ${{ inputs.environment }}
+    runs-on: [self-hosted, rhumi-deploy]
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v6
+      - name: Validate immutable image
+        shell: bash
+        run: |
+          if [[ ! "${{ inputs.image }}" =~ ^ghcr\.io/.+@sha256:[a-f0-9]{64}$ ]]; then
+            echo "Use uma referÃªncia imutÃ¡vel no formato ghcr.io/...@sha256:..."
+            exit 1
+          fi
+      - uses: docker/login-action@v4
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Prepare deployment context
+        shell: bash
+        run: |
+          echo "RHUMI_IMAGE=${{ inputs.image }}" >> "$GITHUB_ENV"
+          echo "RHUMI_ENVIRONMENT=${{ inputs.environment }}" >> "$GITHUB_ENV"
+      - name: Apply forward migrations
+        if: ${{ inputs.run_migrations }}
+        shell: bash
+        run: |
+          docker run --rm \
+            --env-file "/etc/rhumi/${{ inputs.environment }}.migration.env" \
+            --volume "/etc/rhumi/certs/postgresql-ca.pem:/run/secrets/postgresql-ca.pem:ro" \
+            "${{ inputs.image }}" npm run db:migrate:prod
+          docker run --rm \
+            --env-file "/etc/rhumi/${{ inputs.environment }}.migration.env" \
+            --volume "/etc/rhumi/certs/postgresql-ca.pem:/run/secrets/postgresql-ca.pem:ro" \
+            "${{ inputs.image }}" npm run db:provision-app-role:prod
+      - name: Deploy and wait for readiness
+        shell: bash
+        run: |
+          docker compose -f deploy/compose.yml pull
+          docker compose -f deploy/compose.yml up -d --remove-orphans
+          for attempt in {1..30}; do
+            if curl --fail --silent "http://127.0.0.1:${RHUMI_PORT:-8000}/ready" >/dev/null; then
+              exit 0
+            fi
+            sleep 2
+          done
+          docker compose -f deploy/compose.yml logs --tail=100 api
+          exit 1

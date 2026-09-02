@@ -1,0 +1,16 @@
+[Unit]
+Description=Teste de restauração dos arquivos privados RHumi
+
+[Service]
+Type=oneshot
+User=rhumi-backup
+Group=rhumi-backup
+EnvironmentFile=/etc/rhumi/backup.env
+Environment=FILE_BACKUP_OUTPUT_DIR=/var/backups/rhumi-files
+WorkingDirectory=/opt/rhumi/current
+ExecStart=/usr/bin/node /opt/rhumi/current/scripts/verify-latest-file-backup.mjs
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ReadOnlyPaths=/var/backups/rhumi-files

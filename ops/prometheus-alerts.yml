@@ -1,0 +1,46 @@
+groups:
+  - name: rhumi-api
+    rules:
+      - alert: RhumiApiUnavailable
+        expr: up{job="rhumi-api"} == 0
+        for: 2m
+        labels:
+          severity: critical
+        annotations:
+          summary: RHumi API indisponível
+          description: O coletor não consegue acessar /metrics há pelo menos 2 minutos.
+
+      - alert: RhumiApiHighErrorRate
+        expr: |
+          sum(rate(rhumi_http_requests_total{status=~"5.."}[5m]))
+          /
+          clamp_min(sum(rate(rhumi_http_requests_total[5m])), 0.001)
+          > 0.05
+        for: 10m
+        labels:
+          severity: warning
+        annotations:
+          summary: Taxa elevada de erros na RHumi API
+          description: Mais de 5% das requisições retornaram erro 5xx por 10 minutos.
+
+      - alert: RhumiApiHighLatency
+        expr: |
+          histogram_quantile(
+            0.95,
+            sum by (le) (rate(rhumi_http_request_duration_seconds_bucket[10m]))
+          ) > 2
+        for: 10m
+        labels:
+          severity: warning
+        annotations:
+          summary: Latência elevada na RHumi API
+          description: O percentil 95 permaneceu acima de 2 segundos por 10 minutos.
+
+      - alert: RhumiApiMemoryHigh
+        expr: process_resident_memory_bytes{job="rhumi-api"} > 1073741824
+        for: 15m
+        labels:
+          severity: warning
+        annotations:
+          summary: Uso elevado de memória na RHumi API
+          description: O processo usa mais de 1 GiB de memória há pelo menos 15 minutos.

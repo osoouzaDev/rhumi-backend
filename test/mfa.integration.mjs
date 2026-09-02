@@ -116,7 +116,8 @@ try {
         );
         created.employeeId = employee.rows[0].id;
         const user = await client.query(
-            "INSERT INTO users (employee_id, password_hash) VALUES ($1, $2) RETURNING id",
+            `INSERT INTO users (employee_id, password_hash, activated_at, email_verified_at)
+             VALUES ($1, $2, NOW(), NOW()) RETURNING id`,
             [created.employeeId, passwordHash],
         );
         created.userId = user.rows[0].id;

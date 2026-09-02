@@ -9,6 +9,40 @@ export const refreshSessionSchema = z.object({
     refreshToken: z.string().trim().min(32).optional(),
 });
 
+const accountPasswordSchema = z.string().min(12).max(128);
+const accountTokenSchema = z.string().trim().min(48).max(256);
+
+export const forgotPasswordSchema = z.object({
+    identifier: z.string().trim().min(1).max(255),
+}).strict();
+
+export const resetPasswordSchema = z.object({
+    token: accountTokenSchema,
+    newPassword: accountPasswordSchema,
+}).strict();
+
+export const activateAccountSchema = z.object({
+    token: accountTokenSchema,
+    password: accountPasswordSchema,
+}).strict();
+
+export const verifyEmailSchema = z.object({
+    token: accountTokenSchema,
+}).strict();
+
+export const changePasswordSchema = z.object({
+    currentPassword: z.string().min(8).max(128),
+    newPassword: accountPasswordSchema,
+}).strict().refine(
+    (input) => input.currentPassword !== input.newPassword,
+    { message: "A nova senha deve ser diferente da senha atual.", path: ["newPassword"] },
+);
+
+export type ForgotPasswordInput = z.infer<typeof forgotPasswordSchema>;
+export type ResetPasswordInput = z.infer<typeof resetPasswordSchema>;
+export type ActivateAccountInput = z.infer<typeof activateAccountSchema>;
+export type ChangePasswordInput = z.infer<typeof changePasswordSchema>;
+
 export type LoginInput = z.infer<typeof loginSchema>;
 
 const mfaCodeSchema = z.string().trim().min(6).max(32).regex(

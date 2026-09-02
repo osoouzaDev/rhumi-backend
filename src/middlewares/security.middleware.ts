@@ -63,6 +63,15 @@ export const mfaRateLimiter = rateLimit({
     handler: rateLimitHandler,
 });
 
+export const accountRecoveryRateLimiter = rateLimit({
+    store: createRateLimitStore("account-recovery"),
+    windowMs: env.ACCOUNT_RECOVERY_RATE_LIMIT_WINDOW_MS,
+    limit: env.ACCOUNT_RECOVERY_RATE_LIMIT_MAX,
+    standardHeaders: "draft-8",
+    legacyHeaders: false,
+    handler: rateLimitHandler,
+});
+
 const safeMethods = new Set(["GET", "HEAD", "OPTIONS"]);
 
 export const enforceTrustedOrigin = (

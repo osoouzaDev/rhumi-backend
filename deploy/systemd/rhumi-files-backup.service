@@ -1,0 +1,19 @@
+[Unit]
+Description=Backup dos arquivos privados RHumi
+After=network-online.target
+
+[Service]
+Type=oneshot
+User=rhumi-backup
+Group=rhumi-backup
+EnvironmentFile=/etc/rhumi/backup.env
+Environment=FILE_BACKUP_SOURCE=/var/lib/rhumi/files
+Environment=FILE_BACKUP_OUTPUT_DIR=/var/backups/rhumi-files
+WorkingDirectory=/opt/rhumi/current
+ExecStart=/usr/bin/node /opt/rhumi/current/scripts/backup-private-files.mjs
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ReadOnlyPaths=/var/lib/rhumi/files
+ReadWritePaths=/var/backups/rhumi-files

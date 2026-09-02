@@ -1,0 +1,11 @@
+[Unit]
+Description=Backup diário dos arquivos privados RHumi
+
+[Timer]
+OnCalendar=*-*-* 02:45:00
+Persistent=true
+RandomizedDelaySec=900
+Unit=rhumi-files-backup.service
+
+[Install]
+WantedBy=timers.target

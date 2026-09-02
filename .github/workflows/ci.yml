@@ -1,0 +1,124 @@
+name: Continuous Integration
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  tests:
+    name: Automated tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v6
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run automated tests
+        run: npm test
+
+  integration-tests:
+    name: PostgreSQL integration tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    services:
+      postgres:
+        image: postgres:17-alpine
+        env:
+          POSTGRES_USER: rhumi_migrator
+          POSTGRES_PASSWORD: ci-migrator-password-only-for-disposable-tests
+          POSTGRES_DB: rhumi_ci
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U rhumi_migrator -d rhumi_ci"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    env:
+      NODE_ENV: test
+      CORS_ORIGINS: http://localhost:3000
+      FORCE_HTTPS: "false"
+      DATABASE_URL: ""
+      DB_HOST: 127.0.0.1
+      DB_PORT: "5432"
+      DB_USER: rhumi_app
+      DB_PASSWORD: ci-app-password-only-for-disposable-tests
+      DB_NAME: rhumi_ci
+      DB_SSL: "false"
+      DB_SSL_REJECT_UNAUTHORIZED: "true"
+      DB_SSL_CA_PATH: ""
+      DATABASE_MIGRATION_URL: ""
+      DB_MIGRATION_USER: rhumi_migrator
+      DB_MIGRATION_PASSWORD: ci-migrator-password-only-for-disposable-tests
+      JWT_SECRET: ci-jwt-key-only-for-disposable-github-actions-tests-2026-08-31
+      JWT_ISSUER: rhumi-ci
+      JWT_AUDIENCE: rhumi-ci-client
+      AUTH_COOKIES_ENABLED: "false"
+      AUTH_EXPOSE_TOKENS_IN_BODY: "true"
+      MFA_ENABLED: "true"
+      ACCOUNT_TOKENS_EXPOSE_IN_RESPONSE: "true"
+      NOTIFICATION_AUTOMATION_ENABLED: "true"
+      FILE_STORAGE_PATH: ./.tmp-integration-files
+      FILE_RETENTION_CLEANUP_ENABLED: "false"
+      MFA_ENCRYPTION_KEY: AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=
+      RATE_LIMIT_STORE: memory
+      REDIS_URL: ""
+      SEED_COMPANY_LEGAL_NAME: RHumi CI
+      SEED_COMPANY_TAX_ID: 66.666.666/0001-66
+      SEED_ADMIN_NAME: CI Administrator
+      SEED_ADMIN_EMAIL: ci.admin@rhumi.invalid
+      SEED_ADMIN_PASSWORD: CI-Administrator-2026!
+      SEED_ADMIN_EMPLOYEE_CODE: CI-ADMIN
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v6
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Apply database migrations
+        run: npm run db:migrate
+
+      - name: Verify migrations are idempotent
+        run: npm run db:migrate
+
+      - name: Provision restricted application role
+        run: npm run db:provision-app-role
+
+      - name: Seed isolated database
+        run: npm run db:seed
+
+      - name: Verify database permissions
+        run: npm run db:permissions
+
+      - name: Run integration tests
+        run: npm run test:integration

@@ -5,6 +5,7 @@ import {
     updateUserSchema,
     userListQuerySchema,
 } from "../schemas/users.schemas.js";
+import { accountService } from "../services/account.service.js";
 import { usersService } from "../services/users.service.js";
 import { getAuditActor, requireAuthenticationContext } from "../utils/request-auth.js";
 
@@ -34,8 +35,18 @@ export const getUser = async (request: Request, response: Response): Promise<voi
 export const createUser = async (request: Request, response: Response): Promise<void> => {
     const context = requireAuthenticationContext(request);
     const input = createUserSchema.parse(request.body);
-    const user = await usersService.create(context, input, getAuditActor(request));
-    response.status(201).json({ data: { user } });
+    const result = await usersService.create(context, input, getAuditActor(request));
+    response.status(201).json({ data: result });
+};
+
+export const inviteUser = async (request: Request, response: Response): Promise<void> => {
+    const context = requireAuthenticationContext(request);
+    const { id } = idParameterSchema.parse(request.params);
+    await usersService.getById(context, id);
+    const invitation = await accountService.issueInvitation(
+        context, id, getAuditActor(request), { ipAddress: request.ip },
+    );
+    response.status(202).json({ data: { invitation } });
 };
 
 export const updateUser = async (request: Request, response: Response): Promise<void> => {

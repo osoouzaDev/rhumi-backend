@@ -1,0 +1,17 @@
+[Unit]
+Description=Backup consistente do banco RHumi
+After=network-online.target
+
+[Service]
+Type=oneshot
+User=rhumi-backup
+Group=rhumi-backup
+EnvironmentFile=/etc/rhumi/backup.env
+Environment=BACKUP_OUTPUT_DIR=/var/backups/rhumi
+WorkingDirectory=/opt/rhumi/current
+ExecStart=/usr/bin/node /opt/rhumi/current/scripts/backup.mjs
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/var/backups/rhumi

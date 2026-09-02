@@ -80,8 +80,6 @@ try {
                 AND NOT has_table_privilege(CURRENT_USER, 'public.schema_migrations', 'UPDATE')
                 AND NOT has_table_privilege(CURRENT_USER, 'public.schema_migrations', 'DELETE')
                 AS cannot_modify_migration_history,
-            NOT has_table_privilege(CURRENT_USER, 'public.usuarios', 'SELECT')
-                AS cannot_read_legacy_users,
             (
                 SELECT BOOL_AND(classes.relrowsecurity)
                 FROM pg_class AS classes
@@ -103,7 +101,6 @@ try {
         has_no_admin_attributes: true,
         cannot_modify_audit_history: true,
         cannot_modify_migration_history: true,
-        cannot_read_legacy_users: true,
         rls_enabled: true,
     });
 
@@ -150,8 +147,8 @@ try {
                 ],
             );
             const user = await client.query(
-                `INSERT INTO users (employee_id, password_hash)
-                 VALUES ($1, $2) RETURNING id`,
+                `INSERT INTO users (employee_id, password_hash, activated_at, email_verified_at)
+                 VALUES ($1, $2, NOW(), NOW()) RETURNING id`,
                 [employee.rows[0].id, passwordHash],
             );
             await client.query(

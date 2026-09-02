@@ -28,6 +28,8 @@ export interface UserAccount {
     lockedUntil: Date | null;
     lastLoginAt: Date | null;
     passwordChangedAt: Date;
+    activatedAt: Date | null;
+    emailVerifiedAt: Date | null;
     createdAt: Date;
     updatedAt: Date;
 }
@@ -89,6 +91,8 @@ interface UserAccountRow {
     locked_until: Date | null;
     last_login_at: Date | null;
     password_changed_at: Date;
+    activated_at: Date | null;
+    email_verified_at: Date | null;
     created_at: Date;
     updated_at: Date;
     total?: number;
@@ -160,7 +164,8 @@ const userAccountColumns = `
         ORDER BY effective_permissions.permission_code
     ) AS effective_permissions,
     users.failed_login_attempts, users.locked_until, users.last_login_at,
-    users.password_changed_at, users.created_at, users.updated_at
+    users.password_changed_at, users.activated_at, users.email_verified_at,
+    users.created_at, users.updated_at
 `;
 
 const userAccountFrom = `
@@ -190,6 +195,8 @@ const mapUserAccount = (row: UserAccountRow): UserAccount => ({
     lockedUntil: row.locked_until,
     lastLoginAt: row.last_login_at,
     passwordChangedAt: row.password_changed_at,
+    activatedAt: row.activated_at,
+    emailVerifiedAt: row.email_verified_at,
     createdAt: row.created_at,
     updatedAt: row.updated_at,
 });

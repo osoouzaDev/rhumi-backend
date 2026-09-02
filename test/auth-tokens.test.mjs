@@ -58,3 +58,18 @@ test("aceita login por código ou e-mail e rejeita senhas curtas", () => {
         password: "short",
     }).success, false);
 });
+
+test("valida tokens opacos e fluxos de senha", () => {
+    const token = tokenModule.createOpaqueToken();
+    assert.ok(token.length >= 48);
+    assert.equal(tokenModule.hashOpaqueToken(token).length, 64);
+
+    assert.equal(schemaModule.activateAccountSchema.safeParse({
+        token,
+        password: "Nova-Senha-Segura-2026!",
+    }).success, true);
+    assert.equal(schemaModule.changePasswordSchema.safeParse({
+        currentPassword: "Nova-Senha-Segura-2026!",
+        newPassword: "Nova-Senha-Segura-2026!",
+    }).success, false);
+});

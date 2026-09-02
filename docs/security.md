@@ -18,7 +18,7 @@ Este documento descreve os controles aplicados no backend RHumi e o preparo mín
 - PostgreSQL Row-Level Security (RLS) nas tabelas de negócio, autenticação e relacionamentos indiretos.
 - Respostas de erro genéricas, logs sanitizados e identificadores de requisição validados como UUID.
 - PostgreSQL com TLS validado e certificado CA.
-- Usuário da aplicação sem privilégios administrativos, sem `CREATE`, sem acesso à tabela legada e sem permissão para adulterar auditoria ou migrations.
+- Usuário da aplicação sem privilégios administrativos, sem `CREATE`, com isolamento por RLS e sem permissão para adulterar auditoria ou migrations.
 
 ## Isolamento PostgreSQL por empresa
 

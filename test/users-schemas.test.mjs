@@ -11,7 +11,6 @@ const employeeId = "9fe7f5b9-f108-4972-9368-e0fba9076b71";
 test("valida e normaliza a criação de conta de acesso", () => {
     const input = createUserSchema.parse({
         employeeId,
-        password: "uma-senha-segura-123",
         roleCodes: ["Administrator"],
         permissionOverrides: [{
             permissionCode: "EMPLOYEES.READ",
@@ -23,7 +22,7 @@ test("valida e normaliza a criação de conta de acesso", () => {
     assert.equal(input.permissionOverrides[0].permissionCode, "employees.read");
 });
 
-test("rejeita senha curta e perfis ou permissões repetidos", () => {
+test("rejeita senha definida pelo administrador e acessos repetidos", () => {
     assert.equal(createUserSchema.safeParse({
         employeeId,
         password: "curta",
@@ -32,7 +31,6 @@ test("rejeita senha curta e perfis ou permissões repetidos", () => {
 
     assert.equal(createUserSchema.safeParse({
         employeeId,
-        password: "uma-senha-segura-123",
         roleCodes: ["supervisor", "supervisor"],
     }).success, false);
 

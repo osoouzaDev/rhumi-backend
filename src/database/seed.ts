@@ -129,14 +129,16 @@ const seed = async (): Promise<void> => {
         }
 
         const userResult = await client.query<IdRow>(
-            `INSERT INTO users (employee_id, password_hash)
-             VALUES ($1, $2)
+            `INSERT INTO users (employee_id, password_hash, activated_at, email_verified_at)
+             VALUES ($1, $2, NOW(), NOW())
              ON CONFLICT (employee_id) DO UPDATE
              SET password_hash = EXCLUDED.password_hash,
                  status = 'active',
                  failed_login_attempts = 0,
                  locked_until = NULL,
-                 deleted_at = NULL
+                 deleted_at = NULL,
+                 activated_at = COALESCE(users.activated_at, NOW()),
+                 email_verified_at = COALESCE(users.email_verified_at, NOW())
              RETURNING id`,
             [employeeId, passwordHash],
         );
