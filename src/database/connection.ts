@@ -18,6 +18,7 @@ const certificateAuthority = env.DB_SSL_CA_PATH
 
 const ssl = env.DB_SSL
     ? {
+        
         rejectUnauthorized: env.DB_SSL_REJECT_UNAUTHORIZED,
         ...(certificateAuthority ? { ca: certificateAuthority } : {}),
     }
